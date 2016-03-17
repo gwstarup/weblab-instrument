@@ -39,7 +39,7 @@ function updateValidDevice(callback){
       log(validDevice);
       fs.writeFileSync("/tmp/local-device-list", JSON.stringify(validDevice));
       if(callback)
-        callback();
+        callback(validDevice);
   });
 };
 function getDeviceListWithDelay(device,callback){
@@ -51,9 +51,8 @@ function getDeviceListWithDelay(device,callback){
   },2000);
 };
 
-updateValidDevice();
-
 module.exports = {
+  updateValidDevice : updateValidDevice,
   getUsbDevice : function() {
     var devInfo=[];
     var i,j,len=validDevice.length;
