@@ -33,15 +33,43 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gwstarup/weblab-instrument.git"
+    "url": "git+https://github.com/gwstarup/weblab-instrument.git"
   },
   "keywords": [
     "gw"
   ],
-  "author": "benny",
+  "author": {
+    "name": "benny"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gwstarup/weblab-instrument/issues"
   },
-  "homepage": "https://github.com/gwstarup/weblab-instrument"
+  "homepage": "https://github.com/gwstarup/weblab-instrument",
+  "gitHead": "beb1146305dd63eca1433788055fca009ebdf93c",
+  "_id": "weblab-instrument@0.1.0",
+  "_shasum": "c49ed57ca008f9f77668a863c8f8117ce8f0ecd6",
+  "_from": "weblab-instrument@>=0.1.0 <0.2.0",
+  "_npmVersion": "2.14.7",
+  "_nodeVersion": "4.2.2",
+  "_npmUser": {
+    "name": "gwstarup",
+    "email": "benny_lin@goodwill.com.tw"
+  },
+  "dist": {
+    "shasum": "c49ed57ca008f9f77668a863c8f8117ce8f0ecd6",
+    "tarball": "http://registry.npmjs.org/weblab-instrument/-/weblab-instrument-0.1.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "gwstarup",
+      "email": "benny_lin@goodwill.com.tw"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/weblab-instrument-0.1.0.tgz_1457348277788_0.042355298763141036"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/weblab-instrument/-/weblab-instrument-0.1.0.tgz"
 }

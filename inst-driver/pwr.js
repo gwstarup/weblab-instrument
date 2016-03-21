@@ -474,6 +474,12 @@ var _PwrCtrl = function(pwrObj) {
             if(chProp.vout!==undefined){
                 cmd.push({id:chProp.ch, prop:'VOUT', arg:"", cb:null, method:'get'});
             }
+            if(chProp.iset!==undefined){
+                cmd.push({id:chProp.ch, prop:'ISET', arg:"", cb:null, method:'get'});
+            }
+            if(chProp.vset!==undefined){
+                cmd.push({id:chProp.ch, prop:'VSET', arg:"", cb:null, method:'get'});
+            }
 
             if(cmd.length > 0){
                 cmd[cmd.length-1].cb = getDone;
