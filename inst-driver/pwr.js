@@ -162,6 +162,28 @@ var _PwrCtrl = function(pwrObj) {
         });
     }).bind(pwrObj);
 
+    pwrctrl.setDelay = (function(val) {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+            function setDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve(self.sys.status);
+                }
+
+            };
+
+            var sysCmd = [
+                {id:"sys", prop: 'delay_for_a_while', arg : parseInt(val,10), cb:null, method:'set'}
+            ];
+
+            self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
+            self.cmdEvent.emit('cmd_write', sysCmd);
+        });
+    }).bind(pwrObj);
 /**
 *
 */
@@ -204,6 +226,8 @@ var _PwrCtrl = function(pwrObj) {
             var chID=["ch1","ch2","ch3","ch4"];
 
             console.log("pwr getSetup");
+            cmd.push({id:'sys', prop:'SysRemote', arg:"1", cb:null, method:'set'});
+            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 200, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
                 cmd.push({id:chID[i], prop:'ISET', arg:"", cb:null, method:'get'});
                 cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
@@ -284,7 +308,8 @@ var _PwrCtrl = function(pwrObj) {
             };
 
             var sysCmd = [
-                {id:'sys',prop:'STATUS',arg:'',cb:getDone,method:'get'}
+                {id:'sys',prop:'STATUS',arg:'',cb:null,method:'get'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:getDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -311,7 +336,8 @@ var _PwrCtrl = function(pwrObj) {
 
             };
             var sysCmd = [
-                {id:'sys',prop:'TRACK',arg:arg,cb:setDone,method:'set'}
+                {id:'sys',prop:'TRACK',arg:arg,cb:null,method:'set'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -338,7 +364,8 @@ var _PwrCtrl = function(pwrObj) {
 
             };
             var sysCmd = [
-                {id:'sys',prop:'BEEP',arg:arg,cb:setDone,method:'set'}
+                {id:'sys',prop:'BEEP',arg:arg,cb:null,method:'set'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -366,7 +393,8 @@ var _PwrCtrl = function(pwrObj) {
             };
 
             var sysCmd = [
-                {id:'sys',prop:'OUT',arg:arg,cb:setDone,method:'set'}
+                {id:'sys',prop:'OUT',arg:arg,cb:null,method:'set'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -398,9 +426,11 @@ var _PwrCtrl = function(pwrObj) {
 
             if(sysProp.track!==undefined){
                 cmd.push({id:"sys", prop:"TRACK", arg:sysProp.track, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(sysProp.out!==undefined){
                 cmd.push({id:"sys", prop:"OUT", arg:sysProp.out, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(cmd.length > 0){
                 cmd[cmd.length-1].cb = setDone;
@@ -470,15 +500,19 @@ var _PwrCtrl = function(pwrObj) {
 
             if(chProp.iout!==undefined){
                 cmd.push({id:chProp.ch, prop:'IOUT', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(chProp.vout!==undefined){
                 cmd.push({id:chProp.ch, prop:'VOUT', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(chProp.iset!==undefined){
                 cmd.push({id:chProp.ch, prop:'ISET', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(chProp.vset!==undefined){
                 cmd.push({id:chProp.ch, prop:'VSET', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
 
             if(cmd.length > 0){
@@ -531,9 +565,11 @@ var _PwrCtrl = function(pwrObj) {
             }
             if(chProp.iset!==undefined){
                 cmd.push({id:chProp.ch, prop:'ISET', arg:chProp.iset, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(chProp.vset!==undefined){
                 cmd.push({id:chProp.ch, prop:'VSET', arg:chProp.vset, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
             }
             if(cmd.length > 0){
                 cmd[cmd.length-1].cb = setDone;
@@ -574,7 +610,8 @@ var _PwrCtrl = function(pwrObj) {
 
             };
             var sysCmd = [
-                {id:'sys',prop:'SysLocal',arg:'',cb:sysLocal,method:'set'}
+                {id:'sys',prop:'SysLocal',arg:'',cb:null,method:'set'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:sysLocal, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -601,7 +638,8 @@ var _PwrCtrl = function(pwrObj) {
 
             };
             var sysCmd = [
-                {id:'sys',prop:'SysRemote',arg:'',cb:sysRemote,method:'set'}
+                {id:'sys',prop:'SysRemote',arg:'',cb:null,method:'set'},
+                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:sysRemote, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);

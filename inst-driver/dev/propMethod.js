@@ -67,14 +67,14 @@ function Method(id) {
                             if(self.dev.errHandler){
                                 self.dev.errHandler(self);
                             }
-                            callback(["408","\'"+self.dev.state.currentCmd.slice(0,-1)+"\' timeout"]); //call async done function
+                            callback(["408", "\'" + self.dev.state.currentCmd + "\'" + " timeout"]); //call async done function
 
                             // cmd = self.commandObj[self.dev.gdsType]['SysErr'].command+'?\r\n';
                             // self.dev.cmdHandler = self.sys.cmdHandler['SysErr'].getHandler;
                             // self.dev.handlerSelf = self;
                             // self.dev.syncCallback = callback;
                             // self.dev.write(cmd);
-                        }, 10000);
+                        }, 15000);
 
                         // this.net.socket.once('error',function(e){
                         //     console.log('on prop_method :connect error!');
