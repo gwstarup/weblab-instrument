@@ -1,9 +1,3 @@
-<<<<<<< HEAD
 node_modules/
-=======
-build/
-node_modules/
-msoDriver/node_modules/
->>>>>>> remotes/github/master
 .DS_Store
 
