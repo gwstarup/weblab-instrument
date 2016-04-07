@@ -193,6 +193,7 @@ module.exports ={
      */
     supportDevice : {
                         GDS2002E:{vid:'0x2184',pid:'0x003f',type:'DSO'},
+<<<<<<< HEAD
                         GDS2004E:{vid:'0x2184',pid:'0x0040',type:'DSO'},
                         DCS2002E:{vid:'0x098f',pid:'0x0043',type:'DSO'},
                         GDS1002B:{vid:'0x2184',pid:'0x0044',type:'DSO'},
@@ -200,6 +201,12 @@ module.exports ={
                         AFG2225:{vid:'0x2184',pid:'0x001C',type:'AFG'},
                         GDM8342:{vid:'0x2184',pid:'0x0030',type:'DMM'},
                         GDM8351:{vid:'0x2184',pid:'0x003B',type:'DMM'},
+=======
+                        GDS2002E:{vid:'0x2184',pid:'0x0040',type:'DSO'},
+                        DCS2002E:{vid:'0x098f',pid:'0x2204',type:'DSO'},
+                        AFG2225:{vid:'0x2184',pid:'0x001C',type:'AFG'},
+                        GDM8342:{vid:'0x2184',pid:'0x0030',type:'DMM'},
+>>>>>>> remotes/github/master
                         GPD4303S:{vid:'0x0403',pid:'0x6001',type:'PWS'},
                     },
     /*
