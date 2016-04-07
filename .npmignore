@@ -1,0 +1,7 @@
+build/
+node_modules/
+msoDriver/node_modules/
+.DS_Store
+instrument-com.sublime-project
+instrument-com.sublime-workspace
+
