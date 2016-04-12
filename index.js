@@ -44,11 +44,12 @@ function updateValidDevice(callback){
 };
 function getDeviceListWithDelay(device,callback){
   setTimeout(function(){
-    log('add: '+ device);
+    log('add device: ');
+    log(device);
     updateValidDevice(function(){
       callback(device);
     });
-  },2000);
+  },10000);
 };
 
 module.exports = {

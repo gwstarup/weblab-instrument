@@ -192,6 +192,7 @@ module.exports ={
      *  Use to pare usb device
      */
     supportDevice : {
+                        GDS2004A:{vid:'0x2184',pid:'0x0014',type:'DSO'},
                         GDS2002E:{vid:'0x2184',pid:'0x003f',type:'DSO'},
                         GDS2004E:{vid:'0x2184',pid:'0x0040',type:'DSO'},
                         DCS2002E:{vid:'0x098f',pid:'0x0043',type:'DSO'},
@@ -205,6 +206,6 @@ module.exports ={
     /*
      *  Use to find command table
      */
-    supportType : ['GDS2000E','GDS1000B','AFG2200','GDM8300',"GPDX303S"]
+    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','GDM8300',"GPDX303S"]
 
 };

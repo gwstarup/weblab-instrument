@@ -39,7 +39,7 @@ function pairUsb(dev,callback){
             log("dev.usb.vid %x",dev.usb.vid);
             log("dev.usb.pid %x",dev.usb.pid);
             if(dev.usb.pid === 48){
-                serialNumber= 'Silicon_Labs'+'_'+dev.usb.deviceName+'_VCP_PORT'+'_'+dev.usb.serialNumber;
+                serialNumber= 'Silicon_Labs'+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
                 usbbaudrate=115200;
             }
             else if(dev.usb.pid === 24577){
@@ -52,7 +52,8 @@ function pairUsb(dev,callback){
             }
             log("serialNumber %x",serialNumber);
 
-            if(ports[i].serialNumber===serialNumber){
+            if(ports[i].serialNumber === serialNumber){
+                log("serialNumber match");
                 if(dev.state.conn!=='connected'){
                     var port=ports[i];
                         setTimeout(function(){
@@ -99,27 +100,10 @@ function pairUsb(dev,callback){
                                     // dev.usb.device = device;
                                     dev.state.conn='connected';
                                     log('open USB device');
-                                    // device.on('error',function(){
-                                    //     if(dev.usb.device){
-                                    //         if(dev.usb.device.isOpen()){
-                                    //             dev.usb.device.close();
-                                    //         }
-                                    //     }
-                                    //     dev.state.conn='disconnected';
-                                    //     dev.usb.device=null;
-                                    //     dev.interf='empty';
-                                    // });
 
                                     dev.usb.device.on('data',dev.dataHandler);
                                     dev.state.conn='connected';
-                                    // // device.on('data', function(data) {
-                                    // //   log('data received: ' + data);
-                                    // // });
-                                    // dev.usb.device.write('*idn?\r\n',function(err,results){
-                                    //     log('err ' + err);
-                                    //     log('results ' + results);
-                                    // });
-                                    //log(error);
+
                                     if(callback){
                                         log('paireUsb success');
                                         callback(error);
@@ -134,6 +118,7 @@ function pairUsb(dev,callback){
                     // }
                 }
                 else{
+                    log("usb pair: dev already connected");
                     if(callback)
                         callback();
                 }
@@ -255,6 +240,8 @@ exports.listUsbDevice=function(callback){
                     if(port.productId === "0x0030"){
                         info.splice(3,2);
                         info.splice(0,2,"GW");
+                        //FIXME
+                        info[1] += "_VCP_PORT";
                         console.log(info);
                     }
                     else if(port.productId === "0x6001"){

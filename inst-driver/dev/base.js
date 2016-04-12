@@ -103,7 +103,7 @@ function checkDsoExist(dev, callback) {
         if(dev.state.timeoutObj)
             clearTimeout(dev.state.timeoutObj);
 
-        if(timeoutCnt++ > 4) {
+        if(timeoutCnt++ > 6) {
             callback('error');
             return;
         }
