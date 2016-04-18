@@ -42,16 +42,16 @@ function show_props(obj, objName) {
 function getIDN(dev, data, cb) {
     var id = data.toString().split(',');
     var supportType = sysConstant.supportType;
-    dev.gdsType = '';
+    // dev.gdsType = '';
 
     log('getIDN-------------------');
     log('getIDN++++++++++++++++++');
     for (var j = 0; j < supportType.length; j++) {
-        log(supportType[j]);
         if(dev.commandObj[supportType[j]]){
+            log("supported type : " + supportType[j]);
             var gdsModel = dev.commandObj[supportType[j]].model;
             for (var i = 0; i < gdsModel.length ; i++) {
-                log('compare ' + id[1] + 'with ' + gdsModel[i]);
+                log('compare ' + id[1] + ' with supported model ' + gdsModel[i]);
                 if (id[1] === gdsModel[i]) {
                     dev.gdsType = supportType[j];
                     dev.gdsModel = id[1];
@@ -85,8 +85,6 @@ function checkDsoExist(dev, callback) {
     }
 
     dev.state.timeoutObj = setTimeout(function() {
-
-
         log('timeout');
         dev.state.conn = 'timeout';
         // dev.state.conn = 'timeout';
@@ -94,7 +92,7 @@ function checkDsoExist(dev, callback) {
         dev.state.timeoutObj=null;
         dev.syncCallback();
         return;
-        dev.write('*IDN?\r\n');
+        dev.write('\r\n*IDN?\r\n');
         delete dev.state.timeoutObj;
     }, tcnt);
     dev.syncCallback = (function() {
@@ -103,13 +101,13 @@ function checkDsoExist(dev, callback) {
         if(dev.state.timeoutObj)
             clearTimeout(dev.state.timeoutObj);
 
-        if(timeoutCnt++ > 6) {
-            callback('error');
+        if(timeoutCnt++ > 7) {
+            callback('check device exist error');
             return;
         }
         if(dev.gdsType ==='') {
             dev.state.setTimeout = true;
-            dev.write('*IDN?\r\n');
+            dev.write('\r\n*IDN?\r\n');
             dev.state.timeoutObj = setTimeout(function() {
                 log('timeout');
                 dev.state.conn = 'timeout';
@@ -122,9 +120,9 @@ function checkDsoExist(dev, callback) {
     }).bind(dev);
 
     if(dev.usb.pid === 24577){
-        if(dev.write('REMOTE\r\n')){
+        if(dev.write('\r\nREMOTE\r\n')){
             setTimeout(function(){
-                dev.write('*IDN?\r\n');
+                dev.write('\r\n*IDN?\r\n');
             },2000);
         }
         else{
@@ -134,7 +132,7 @@ function checkDsoExist(dev, callback) {
         }
     }
     else{
-        if(!dev.write('*IDN?\r\n')){
+        if(!dev.write('\r\n*IDN?\r\n')){
             log('checkDsoExist error');
             clearTimeout(dev.state.timeoutObj);
             callback('check device exist error');

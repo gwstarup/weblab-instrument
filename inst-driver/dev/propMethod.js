@@ -67,7 +67,7 @@ function Method(id) {
                             if(self.dev.errHandler){
                                 self.dev.errHandler(self);
                             }
-                            callback(["408", "\'" + self.dev.state.currentCmd + "\'" + " timeout"]); //call async done function
+                            callback(["408", "command : " + self.dev.state.currentCmd + "," + " timeout"]); //call async done function
 
                             // cmd = self.commandObj[self.dev.gdsType]['SysErr'].command+'?\r\n';
                             // self.dev.cmdHandler = self.sys.cmdHandler['SysErr'].getHandler;
