@@ -2,6 +2,7 @@
 
 var net     = require('net');
 var fs      = require('fs');
+var exec    = require('child_process').exec;
 var async   = require('async');
 var uitl    = require('util');
 var events  = require('events');
@@ -24,6 +25,27 @@ var connectedDevice=[];
 
 function updateValidDevice(callback){
   log("updateValidDevice");
+
+  fs.readdir('/dev', function (err, files) {
+    if (err) {
+      return;
+    }
+
+    //get only serial port  names
+    for (var i = files.length - 1;i>=0;i--){
+      if ((files[i].indexOf('ttyS') === -1 && files[i].indexOf('ttyACM') === -1 && files[i].indexOf('ttyUSB') === -1 && files[i].indexOf('ttyAMA') === -1) || !fs.statSync(path.join('/dev',files[i])).isCharacterDevice()){
+        files.splice(i,1);
+      }
+    }
+
+    async.map(files, function (file, callback) {
+      var fileName = path.join('/dev', file);
+      exec('/sbin/udevadm test $(/sbin/udevadm info -n '+fileName+ ' -q path)', function (err, stdout) {
+        callback();
+      });
+    });
+  });
+
   usbDev.listUsbDevice(function(devList){
       if(devList === undefined){
         console.log("devList undefined");

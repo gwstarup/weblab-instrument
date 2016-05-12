@@ -187,7 +187,7 @@ var _DmmCtrl = function(dmmObj) {
             };
             var cmd=[];
 
-            console.log("dmm getSetup");
+            log("dmm getSetup");
             cmd.push({id:"sys", prop:'Function', arg:"", cb:null, method:'get'});
             cmd.push({id:"sys", prop:'AutoRange', arg:"", cb:null, method:'get'});
             cmd.push({id:"conf", prop:'QueryRange',  arg:"", cb:getDone, method:'get'});
@@ -204,6 +204,8 @@ var _DmmCtrl = function(dmmObj) {
         return new Promise(function(resolve, reject) {
             function setDone(e){
                 if (e) {
+                    log("dmm.setSetup error");
+                    log(e);
                     reject(e);
                 }else {
                     resolve();
@@ -213,7 +215,9 @@ var _DmmCtrl = function(dmmObj) {
             var func;
             var range;
 
-            console.log("dmm setSetup");
+            log("dmm setSetup");
+            log(setup);
+
             if(setup.func.slice(0,-2) === "VOLT"){
                 func="\"VOLT\"";
                 range='RangeVoltDC';

@@ -225,7 +225,7 @@ var _PwrCtrl = function(pwrObj) {
             var i;
             var chID=["ch1","ch2","ch3","ch4"];
 
-            console.log("pwr getSetup");
+            log("pwr getSetup");
             cmd.push({id:'sys', prop:'SysRemote', arg:"1", cb:null, method:'set'});
             cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 200, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
@@ -249,6 +249,8 @@ var _PwrCtrl = function(pwrObj) {
         return new Promise(function(resolve, reject) {
             function setDone(e){
                 if (e) {
+                    log("pwr.setSetup error");
+                    log(e);
                     reject(e);
                 }else {
                     resolve();
@@ -259,11 +261,10 @@ var _PwrCtrl = function(pwrObj) {
             var chID=["ch1","ch2","ch3","ch4"];
             var track;
 
-            console.log("pwr setSetup");
-            console.log(setup);
+            log("pwr setSetup");
+            log(setup);
 
             cmd.push({id:'sys', prop:'SysRemote', arg:"1", cb:null, method:'set'});
-            cmd.push({id:'sys', prop:'OUT', arg:"0", cb:null, method:'set'});
             cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
                 cmd.push({id:chID[i], prop:'ISET', arg: setup.chProps[chID[i]].iset.slice(0,-2), cb:null, method:'set'});

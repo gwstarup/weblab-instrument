@@ -622,7 +622,9 @@ var _DsoCtrl = function(dsoObj) {
                         },
                         horProps : {
                             pos : self.hor.position,
-                            scale : self.hor.scale
+                            mode : self.hor.mode,
+                            scale : self.hor.scale,
+                            zscale : self.hor.zscale,
                         },
                         acqProps : {
                             mode : self.acq.mode,
@@ -649,6 +651,8 @@ var _DsoCtrl = function(dsoObj) {
             }
             cmd.push({id:'hor',prop:'HorScale',arg:"", cb:null,method:'get'});
             cmd.push({id:'hor',prop:'HorPosition',arg:"", cb:null,method:'get'});
+            cmd.push({id:'hor',prop:'HorMode',arg: "", cb:null,method:'get'});
+            cmd.push({id:'hor',prop:'HorZoomScale',arg: "", cb:null,method:'get'});
             cmd.push({id:'acq', prop:'AcqMode', arg:"", cb:null, method:'get'});
             cmd.push({id:'acq', prop:'AcqAverage', arg:"", cb:null, method:'get'});
             cmd.push({id:'acq', prop:'AcqRecLength', arg:"", cb:null, method:'get'});
@@ -675,6 +679,8 @@ var _DsoCtrl = function(dsoObj) {
         return new Promise(function(resolve, reject) {
             function setDone(e){
                 if (e) {
+                    log("dso.setSetup error");
+                    log(e);
                     reject(e);
                 }else {
                     resolve();
@@ -683,7 +689,8 @@ var _DsoCtrl = function(dsoObj) {
             var cmd=[];
             var i;
             var chID=["ch1","ch2","ch3","ch4"];
-            console.log("setSetup");
+            log("dso setSetup");
+            log(setup);
 
             cmd.push({id:'sys',prop:'RST',arg:'',cb:null,method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
@@ -698,6 +705,8 @@ var _DsoCtrl = function(dsoObj) {
             }
             cmd.push({id:'hor',prop:'HorScale',arg: setup.horProps.scale, cb:null,method:'set'});
             cmd.push({id:'hor',prop:'HorPosition',arg: setup.horProps.pos, cb:null,method:'set'});
+            cmd.push({id:'hor',prop:'HorMode',arg: setup.horProps.mode, cb:null,method:'set'});
+            cmd.push({id:'hor',prop:'HorZoomScale',arg: setup.horProps.zscale, cb:null,method:'set'});
             cmd.push({id:'acq', prop:'AcqMode', arg: setup.acqProps.mode, cb:null, method:'set'});
             cmd.push({id:'acq', prop:'AcqAverage', arg: setup.acqProps.average, cb:null, method:'set'});
             cmd.push({id:'acq', prop:'AcqRecLength', arg: setup.acqProps.length, cb:null, method:'set'});

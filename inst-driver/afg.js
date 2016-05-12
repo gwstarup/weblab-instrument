@@ -321,7 +321,7 @@ var _AfgCtrl = function(afgObj) {
             var pmID = ["pm1","pm2"];
             var sweepID = ["sweep1","sweep2"];
 
-            console.log("afg getSetup");
+            log("afg getSetup");
             for(i=0; i<self.dev.maxChNum; i++){
                 cmd.push({id:chID[i], prop:'FuncType', arg:"", cb:null, method:'get'});
                 cmd.push({id:chID[i], prop:'Freq', arg:"", cb:null, method:'get'});
@@ -379,6 +379,8 @@ var _AfgCtrl = function(afgObj) {
         return new Promise(function(resolve, reject) {
             function setDone(e){
                 if (e) {
+                    log("afg.setSetup error");
+                    log(e);
                     reject(e);
                 }else {
                     resolve();
@@ -392,79 +394,82 @@ var _AfgCtrl = function(afgObj) {
             var pmID = ["pm1","pm2"];
             var sweepID = ["sweep1","sweep2"];
 
-            console.log("afg setSetup");
+            log("afg setSetup");
+            log(setup);
+
             cmd.push({id:"sys", prop: 'RST', arg : "", cb:null, method:'set'});
-            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'FuncType', arg: setup.chProps[chID[i]].type.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'Freq', arg: setup.chProps[chID[i]].freq.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'Ampl',  arg: setup.chProps[chID[i]].ampl.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'DCOffset', arg: setup.chProps[chID[i]].offset.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'RampSym', arg: setup.chProps[chID[i]].sym.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 if(setup.chProps[chID[i]].state.slice(0,-1) === '0'){
                     cmd.push({id:chID[i], prop:'OutputState', arg: "OFF" , cb:null, method:'set'});
                 }
                 else{
                     cmd.push({id:chID[i], prop:'OutputState', arg: "ON", cb:null, method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 // cmd.push({id:chID[i], prop:'OutputLoad',arg:"", cb:null,method:'set'});
                 cmd.push({id:chID[i], prop:'SquDuty',arg: setup.chProps[chID[i]].duty.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'VoltageUnit',arg: setup.chProps[chID[i]].amplUnit.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:amID[i],prop:'AMInteFunc',arg: setup.chProps[chID[i]].modulation.am.shape.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:amID[i],prop:'AMInteFreq',arg: setup.chProps[chID[i]].modulation.am.freq.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:amID[i], prop:'AMSource', arg: setup.chProps[chID[i]].modulation.am.source.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 if(setup.chProps[chID[i]].modulation.am.state.slice(0,-1) === '0'){
                     cmd.push({id:amID[i], prop:'AMState', arg: "OFF", cb:null, method:'set'});
                 }
                 else{
                     cmd.push({id:amID[i], prop:'AMState', arg: "ON", cb:null, method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
 
                 cmd.push({id:amID[i], prop:'AMDepth', arg: setup.chProps[chID[i]].modulation.am.depth.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:fmID[i],prop:'FMInteFunc',arg: setup.chProps[chID[i]].modulation.fm.shape.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:fmID[i],prop:'FMInteFreq',arg: setup.chProps[chID[i]].modulation.fm.freq.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:fmID[i], prop:'FMSource', arg: setup.chProps[chID[i]].modulation.fm.source.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 if(setup.chProps[chID[i]].modulation.fm.state.slice(0,-1) === '0'){
                     cmd.push({id:fmID[i], prop:'FMState', arg: "OFF", cb:null, method:'set'});
                 }
                 else{
                     cmd.push({id:fmID[i], prop:'FMState', arg: "ON", cb:null, method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:fmID[i], prop:'FMDeviation', arg: setup.chProps[chID[i]].modulation.fm.deviation.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
 
                 cmd.push({id:pmID[i],prop:'PMInteFunc',arg: setup.chProps[chID[i]].modulation.pm.shape.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:pmID[i],prop:'PMInteFreq',arg: setup.chProps[chID[i]].modulation.pm.freq.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:pmID[i], prop:'PMSource', arg: setup.chProps[chID[i]].modulation.pm.source.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 if(setup.chProps[chID[i]].modulation.pm.state.slice(0,-1) === '0'){
                     cmd.push({id:pmID[i], prop:'PMState', arg: "OFF", cb:null, method:'set'});
                 }
                 else{
                     cmd.push({id:pmID[i], prop:'PMState', arg: "ON", cb:null, method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:pmID[i], prop:'PMDeviation', arg: setup.chProps[chID[i]].modulation.pm.deviation.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
 
                 if(setup.chProps[chID[i]].sweep.state.slice(0,-1) === '0'){
                     cmd.push({id:sweepID[i], prop:'SweepState', arg: "OFF", cb:null, method:'set'});
@@ -472,28 +477,28 @@ var _AfgCtrl = function(afgObj) {
                 else{
                     cmd.push({id:sweepID[i], prop:'SweepState', arg: "ON", cb:null, method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepFrqStart', arg: setup.chProps[chID[i]].sweep.startfreq.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepFrqStop',  arg: setup.chProps[chID[i]].sweep.stopfreq.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepFrqCenter', arg: setup.chProps[chID[i]].sweep.centerfreq.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepFrqSpan', arg: setup.chProps[chID[i]].sweep.span.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepSpacing', arg: setup.chProps[chID[i]].sweep.type.slice(0,-1), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepTime',arg: setup.chProps[chID[i]].sweep.swptime.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepSource',arg: setup.chProps[chID[i]].sweep.source.slice(0,-1), cb:null,method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 if(setup.chProps[chID[i]].sweep.marker.slice(0,-1) === '0'){
                     cmd.push({id:sweepID[i], prop:'SweepMarker',arg: "OFF", cb:null,method:'set'});
                 }
                 else{
                     cmd.push({id:sweepID[i], prop:'SweepMarker',arg: "ON", cb:null,method:'set'});
                 }
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:sweepID[i], prop:'SweepMarkerFreq',arg: setup.chProps[chID[i]].sweep.markerfreq.slice(0,-1), cb:null,method:'set'});
 
             }
