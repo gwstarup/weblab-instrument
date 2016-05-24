@@ -55,7 +55,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-1","5E+0","5E+1",
-                    "5E+2","1E+3"
+                    "5E+2","1E+3",
+                    "1E-1","1E+0","1E+1",
+                    "1E+2","1E+3"
                   ]
     },
     "RangeVoltAC":{
@@ -63,7 +65,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-1","5E+0","5E+1",
-                    "5E+2","7.5E+2"
+                    "5E+2","7.5E+2",
+                    "1E-1","1E+0","1E+1",
+                    "1E+2","7.5E+2"
                   ]
     },
     "RangeVoltDCAC":{
@@ -71,7 +75,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-1","5E+0","5E+1",
-                    "5E+2","7.5E+2"
+                    "5E+2","7.5E+2",
+                    "1E-1","1E+0","1E+1",
+                    "1E+2","7.5E+2"
                   ]
     },
     "RangeCurrDC":{
@@ -79,7 +85,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-4","5E-3","5E-2",
-                    "5E-1","5E+0","1E+1"
+                    "5E-1","5E+0","1E+1",
+                    "1E-2","1E-1","1E+0",
+                    "1E+1"
                   ]
     },
     "RangeCurrAC":{
@@ -87,7 +95,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-4","5E-3","5E-2",
-                    "5E-1","5E+0","1E+1"
+                    "5E-1","5E+0","1E+1",
+                    "1E-2","1E-1","1E+0",
+                    "1E+1"
                   ]
     },
     "RangeCurrDCAC":{
@@ -95,7 +105,9 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E-4","5E-3","5E-2",
-                    "5E-1","5E+0","1E+1"
+                    "5E-1","5E+0","1E+1",
+                    "1E-2","1E-1","1E+0",
+                    "1E+1"
                   ]
     },
     "RangeResistance":{
@@ -103,7 +115,10 @@
       "parameter_type":"float_string",
       "parameter":[
                     "5E+2","5E+3","5E+4",
-                    "5E+5","5E+6","5E+7"
+                    "5E+5","5E+6","5E+7",
+                    "1E+2","1E+3","1E+4",
+                    "1E+5","1E+6","1E+7",
+                    "1E+8"
                   ]
     },
     "AutoRange":{

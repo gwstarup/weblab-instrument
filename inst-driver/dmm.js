@@ -567,7 +567,6 @@ var _DmmCtrl = function(dmmObj) {
         });
     }).bind(dmmObj);
 /**
-*   The method belong to dmmctrl class used to set the device into remote state
 *
 *   @method force
 *
@@ -591,6 +590,17 @@ var _DmmCtrl = function(dmmObj) {
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
             self.cmdEvent.emit('cmd_write', sysCmd);
+        });
+    }).bind(dmmObj);
+/**
+*
+*/
+    dmmctrl.model = (function() {
+        var self = this;
+
+        // console.log("get dmm model");
+        return new Promise(function(resolve, reject) {
+            resolve(self.dev.gdsModel);
         });
     }).bind(dmmObj);
 

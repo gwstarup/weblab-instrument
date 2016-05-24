@@ -104,6 +104,16 @@ function pairUsb(dev,callback){
                                     dev.usb.device.on('data',dev.dataHandler);
                                     dev.state.conn='connected';
 
+                                    dev.usb.device.on('disconnect', function(err,dataObj){
+                                        // console.log("usb disconnect");
+                                        // console.log(err);
+                                        // console.log(dev);
+                                        dev.state.conn!=='disconnected';
+                                        dev.usb.device=null;
+                                        dev.interf='empty';
+                                        console.log("-----------------");
+                                    });
+
                                     if(callback){
                                         log('paireUsb success');
                                         callback(error);

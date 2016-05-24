@@ -173,9 +173,13 @@ module.exports = {
               devDri.connect()
                 .then(function(){
                   log('dmm connect done');
-                  connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                  log(connectedDevice);
-                  callback('',id);
+                  devDri.model().then(function(devModel){
+                    device.deviceName = devModel;
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
+                    log(connectedDevice);
+                    callback('',id);
+                  });
+
                 })
                 .catch(function(e){
                   devDri.disconnect().then(function(){
@@ -186,14 +190,19 @@ module.exports = {
             return;
           case 'PWS':
               log('create PWS usb instance');
+              log(device);
+
               id=device.driverID;
               devDri=pwrDev.PwrUSB(device);
               devDri.connect()
                 .then(function(){
                   log('pwr connect done');
-                  connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                  log(connectedDevice);
-                  callback('',id);
+                  devDri.model().then(function(devModel){
+                    device.deviceName = devModel;
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
+                    log(connectedDevice);
+                    callback('',id);
+                  })
                 })
                 .catch(function(e){
                   devDri.disconnect().then(function(){
@@ -243,26 +252,36 @@ module.exports = {
           log(connectedDevice[i].devInfo.serialNumber);
           if(device.serialNumber === connectedDevice[i].devInfo.serialNumber){
             let devIndex = i;
-            devDri =connectedDevice[devIndex].devDri;
-            devDri.closeDev()
-              .then(function(){
-                log('connectedDevice after remove');
-                log(connectedDevice);
-                log("delete connectedDevice "+devIndex);
-                delete connectedDevice[devIndex].devDri;
-                connectedDevice.splice(devIndex,1);
-                log(connectedDevice);
-                log('--------------------');
-                callback(device);
-              })
-              .catch(function(err){
-                log(err);
-                delete connectedDevice[devIndex].devDri;
-                connectedDevice.splice(devIndex,1);
-                log('close device not work');
-                callback(device);
-              });
-              break;
+            // devDri =connectedDevice[devIndex].devDri;
+            // devDri.closeDev()
+            //   .then(function(){
+            //     log('connectedDevice after remove');
+            //     log(connectedDevice);
+            //     log("delete connectedDevice "+devIndex);
+            //     delete connectedDevice[devIndex].devDri;
+            //     connectedDevice.splice(devIndex,1);
+            //     log(connectedDevice);
+            //     log('--------------------');
+            //     callback(device);
+            //   })
+            //   .catch(function(err){
+            //     log(err);
+            //     delete connectedDevice[devIndex].devDri;
+            //     connectedDevice.splice(devIndex,1);
+            //     log('close device not work');
+            //     callback(device);
+            //   });
+
+            log('connectedDevice after remove');
+            log(connectedDevice);
+            log("delete connectedDevice "+devIndex);
+            delete connectedDevice[devIndex].devDri;
+            connectedDevice.splice(devIndex,1);
+            log(connectedDevice);
+            log('--------------------');
+            callback(device);
+
+            break;
           }
         }
       });

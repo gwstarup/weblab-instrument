@@ -1,7 +1,7 @@
 {
   "GPDX303S": {
     "model":["GPD-2303S","GPD-3303S","GPD-4303S"],
-    "maxChNum":{"GPD-2303S":2,"GPD-3303S":3,"GPD-4303S":4},
+    "maxChNum":{"GPD-2303S":2,"GPD-3303S":2,"GPD-4303S":4},
     "IDN":{
       "command":"*IDN",
       "parameter_type":"query_only"

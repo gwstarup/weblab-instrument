@@ -647,6 +647,19 @@ var _PwrCtrl = function(pwrObj) {
             self.cmdEvent.emit('cmd_write', sysCmd);
         });
     }).bind(pwrObj);
+
+/**
+*
+*/
+    pwrctrl.model = (function() {
+        var self = this;
+
+        console.log("get power model");
+        return new Promise(function(resolve, reject) {
+            resolve(self.dev.gdsModel);
+        });
+    }).bind(pwrObj);
+
 /**
 *
 *

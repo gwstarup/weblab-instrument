@@ -26,6 +26,12 @@ SysCmd.prototype.cmdHandler = {
                                 return true;
                               }
         },
+        'CLS':{
+                    setHelper:function(sysObj,arg,cb){
+                                log('sent CLS command');
+                                return true;
+                              }
+        },
         'VAL':{
                     getHandler:function(sysObj,res,cb){
                                 sysObj.val = res;

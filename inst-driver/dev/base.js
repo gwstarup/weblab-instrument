@@ -194,7 +194,10 @@ var Dev = function() {
         // }
 
         log('dataHandler receive :' + data.slice(0,20) + ',length=' + data.length);
+        let str = data.toString();
+        log("0x"+str.charCodeAt(str.length -1).toString(16));
         if(!this.cmdHandler){
+            log("cmdHandler not define");
             return;
         }
         if(this.queryBlock !== true){
