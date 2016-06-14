@@ -1981,6 +1981,30 @@ var _DsoCtrl = function(dsoObj) {
     }).bind(dsoObj);
 
 /**
+*
+*/
+    dsoctrl.model = (function() {
+        var self = this;
+
+        console.log("get dso model");
+        return new Promise(function(resolve, reject) {
+            resolve({ model : self.dev.gdsModel , type : self.dev.gdsType });
+        });
+    }).bind(dsoObj);
+/**
+*
+*/
+    dsoctrl.type = (function() {
+        var self = this;
+
+        console.log("get dso type");
+        return new Promise(function(resolve, reject) {
+            resolve(self.dev.gdsType);
+        });
+    }).bind(dsoObj);
+
+
+/**
 *   The method belong to dsoctrl class used to set the device into stop state
 *
 *   @method stop

@@ -361,8 +361,8 @@
     },
     "AcqRecLength":{
       "command":":ACQuire:RECOrdlength",
-      "parameter_type":"float_string",
-      "parameter":["1E+3","1E+4","1E+5","1E+6","1E+7"]
+      "parameter_type":"string",
+      "parameter":["AUTO","SHORT"]
     },
     "AcqHeader":{
       "command":":HEADer",

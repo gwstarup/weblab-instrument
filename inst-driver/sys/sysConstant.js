@@ -200,7 +200,7 @@ module.exports ={
                         GDS1004B:{vid:'0x2184',pid:'0x2204',type:'DSO'},
                         AFG2225:{vid:'0x2184',pid:'0x001C',type:'AFG'},
                         GDM8342:{vid:'0x2184',pid:'0x0030',type:'DMM'},
-                        GDM8351:{vid:'0x2184',pid:'0x003B',type:'DMM'},
+                        GDM835X:{vid:'0x2184',pid:'0x003B',type:'DMM'},
                         GPD4303S:{vid:'0x0403',pid:'0x6001',type:'PWS'},
                     },
     /*

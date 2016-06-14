@@ -1,7 +1,7 @@
 {
   "AFG2200": {
-    "model":["AFG-2225"],
-    "maxChNum":{"AFG-2225":2},
+    "model":["AFG-2225","AFG-2025"],
+    "maxChNum":{"AFG-2225":2,"AFG-2025":1},
     "IDN":{
       "command":"*IDN",
       "parameter_type":"query_only"

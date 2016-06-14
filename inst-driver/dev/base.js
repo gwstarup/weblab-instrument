@@ -84,17 +84,6 @@ function checkDsoExist(dev, callback) {
         tcnt = 3000;
     }
 
-    dev.state.timeoutObj = setTimeout(function() {
-        log('timeout');
-        dev.state.conn = 'timeout';
-        // dev.state.conn = 'timeout';
-        // callback('error');
-        dev.state.timeoutObj=null;
-        dev.syncCallback();
-        return;
-        dev.write('\r\n*IDN?\r\n');
-        delete dev.state.timeoutObj;
-    }, tcnt);
     dev.syncCallback = (function() {
         var self = this;
 
@@ -119,6 +108,13 @@ function checkDsoExist(dev, callback) {
         }
     }).bind(dev);
 
+    dev.state.timeoutObj = setTimeout(function() {
+        log('timeout');
+        dev.state.conn = 'timeout';
+        dev.state.timeoutObj=null;
+        dev.syncCallback();
+    }, tcnt);
+
     if(dev.usb.pid === 24577){
         if(dev.write('\r\nREMOTE\r\n')){
             setTimeout(function(){
@@ -126,14 +122,14 @@ function checkDsoExist(dev, callback) {
             },2000);
         }
         else{
-            log('check device exist error');
+            log('check device exist error: usb not ready');
             clearTimeout(dev.state.timeoutObj);
             callback('check device exist error');
         }
     }
     else{
         if(!dev.write('\r\n*IDN?\r\n')){
-            log('checkDsoExist error');
+            log('check device exist error: usb not ready');
             clearTimeout(dev.state.timeoutObj);
             callback('check device exist error');
         }
