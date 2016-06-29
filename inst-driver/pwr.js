@@ -656,10 +656,29 @@ var _PwrCtrl = function(pwrObj) {
 
         console.log("get power model");
         return new Promise(function(resolve, reject) {
+
             resolve(self.dev.gdsModel);
         });
     }).bind(pwrObj);
+/**
+*
+*/
+    pwrctrl.clearEvent = (function() {
+        var self = this;
 
+        return new Promise(function(resolve, reject) {
+            if(self.dev.writeTimeoutObj){
+                clearTimeout(self.dev.writeTimeoutObj);
+            }
+            self.dev.asyncWrite = 'done';
+            self.dev.queryBlock = false;
+            self.dev.state.setTimeout=false;
+            if(self.dev.state.timeoutObj){
+                clearTimeout(self.dev.state.timeoutObj);
+            }
+            resolve();
+        });
+    }).bind(pwrObj);
 /**
 *
 *
@@ -677,18 +696,17 @@ var _PwrCtrl = function(pwrObj) {
 
 }
 
-var cmd_queue = [];
 var cmd_write = function() {
     var self = this;
     var cb = null;
 
-
+    var cmd = [];
     // log(this.dev.cmdSequence);
     if (this.dev.asyncWrite === 'busy') {
         log('async write busy');
-        log("command left "+cmd_queue.length);
+        log(this.dev.cmdSequence);
         if (this.dev.writeTimeoutObj === null) {
-            log('set timeout');
+            log('set timeout retry cmd_write');
             this.dev.writeTimeoutObj = setTimeout(function() {
                 log('cmd_write reissue');
                 self.dev.writeTimeoutObj = null;
@@ -698,34 +716,17 @@ var cmd_write = function() {
         return;
     }
 
-    if (this.dev.cmdSequence.length === 0) {
-        if (this.dev.writeTimeoutObj !== null) {
-            clearTimeout(this.dev.writeTimeoutObj);
-            // this.writeTimeoutObj=null;
-            this.dev.emit('cmd_write', self.dev.cmdSequence);
-        }
-        log('cmdSequence = 0');
-        return;
-    }
-
     for (var i = 0, len = this.dev.cmdSequence.length; i < len; i++) {
-        cmd_queue[i] = this.dev.cmdSequence.shift();
+        cmd[i] = this.dev.cmdSequence.shift();
 
         // avoid missing async callback, flush command buffer when find cb exist
-        if (cmd_queue[i].cb !== null){
-            cb = cmd_queue[i].cb;
-            if(i < len-1 ){
-                this.dev.writeTimeoutObj = setTimeout(function() {
-                    log('cmd_write reissue');
-                    self.dev.writeTimeoutObj = null;
-                    cmd_write.call(self);
-                },200);
-            }
+        if (cmd[i].cb !== null){
+            cb = cmd[i].cb;
             break;
         }
     }
     self.dev.asyncWrite = 'busy';
-    async.eachSeries(cmd_queue,
+    async.eachSeries(cmd,
         function(item,done) {
             log(item);
             if(item.method === 'set') {
@@ -735,12 +736,16 @@ var cmd_write = function() {
                 self[item.id].prop.get(item.prop, item.arg, done);
             }
         },function(err, results) {
+
+            if(err){
+                self.dev.cmdSequence = [];
+            }
+            else if(self.dev.cmdSequence.length !== 0) {
+                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
+            }
             log('err: '+err);
-            cmd_queue = null;
-            cmd_queue = [];
             self.dev.asyncWrite = 'done';
             self.dev.state.conn = 'connected';
-            log('dev.asyncWrite='+self.dev.asyncWrite);
             log('async write done');
             if (cb)
                 cb(err);

@@ -49,12 +49,6 @@ function Method(id) {
                             this.dev.queryBlock = false;
                         }
 
-                        this.dev.cmdHandler = this[id].cmdHandler[prop].getHandler;
-                        this.dev.handlerSelf = this[id];
-                        this.dev.syncCallback = callback;
-                        this.dev.write(cmd);
-
-
                         this.dev.state.conn = 'query';
                         this.dev.state.currentCmd = cmd;
                         this.dev.state.currentId = id;
@@ -69,18 +63,16 @@ function Method(id) {
                             }
                             callback(["408", "command : " + self.dev.state.currentCmd + "," + " timeout"]); //call async done function
 
-                            // cmd = self.commandObj[self.dev.gdsType]['SysErr'].command+'?\r\n';
-                            // self.dev.cmdHandler = self.sys.cmdHandler['SysErr'].getHandler;
-                            // self.dev.handlerSelf = self;
-                            // self.dev.syncCallback = callback;
-                            // self.dev.write(cmd);
                         }, 15000);
 
-                        // this.net.socket.once('error',function(e){
-                        //     console.log('on prop_method :connect error!');
-                        //     if(typeof callback=== 'function')
-                        //         callback(e);
-                        // });
+                        this.dev.cmdHandler = this[id].cmdHandler[prop].getHandler;
+                        this.dev.handlerSelf = this[id];
+                        this.dev.syncCallback = callback;
+                        if(! this.dev.write(cmd)){
+                            clearTimeout(this.dev.state.timeoutObj);
+                            callback(["405", "device not avaiable"]); //call async done function
+                        }
+
 
         }.bind(this),
 
@@ -134,6 +126,9 @@ function Method(id) {
                                     callback(['100','\''+arg+'\' argument not supported','cmd '+cmd]);
                                 return;
                             }
+                        }
+                        else if(rangeLimit.parameter_type === 'user_string'){
+                            cmd += ' '+ "\"" + arg + "\"" + '\r\n';
                         }
                         else if (rangeLimit.parameter_type === 'float_string') {
                             var i=0;
@@ -236,7 +231,7 @@ function Method(id) {
                             }
                             else if(this.dev.interf === 'use'){
                                 if(callback){
-                                        callback('use write error');
+                                        callback('usb write error');
                                     }
                             }
                         }

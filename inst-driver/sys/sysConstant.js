@@ -199,6 +199,7 @@ module.exports ={
                         GDS1002B:{vid:'0x2184',pid:'0x0044',type:'DSO'},
                         GDS1004B:{vid:'0x2184',pid:'0x2204',type:'DSO'},
                         AFG2225:{vid:'0x2184',pid:'0x001C',type:'AFG'},
+                        MFG2000:{vid:'0x2184',pid:'0x001D',type:'AFG'},
                         GDM8342:{vid:'0x2184',pid:'0x0030',type:'DMM'},
                         GDM835X:{vid:'0x2184',pid:'0x003B',type:'DMM'},
                         GPD4303S:{vid:'0x0403',pid:'0x6001',type:'PWS'},
@@ -206,6 +207,6 @@ module.exports ={
     /*
      *  Use to find command table
      */
-    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','GDM8300',"GPDX303S"]
+    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','MFG2200','GDM8300',"GPDX303S"]
 
 };

@@ -132,6 +132,20 @@ SysCmd.prototype.cmdHandler = {
                                 return true;
                               }
         },
+        'QRCode':{
+                    setHelper:function(sysObj, arg, cb) {
+                                console.log('QRCode');
+                                console.log(arg);
+                                return true;
+                              }
+        },
+        'QRCodeTitle':{
+                    setHelper:function(sysObj, arg, cb) {
+                                console.log('QRCodeTitle');
+                                console.log(arg);
+                                return true;
+                              }
+        },
         'DispOut':{
                     getHandler:function(sysObj, data, cb) {
                                 //log('typeof data='+typeof data);

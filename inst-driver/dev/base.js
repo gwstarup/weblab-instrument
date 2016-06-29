@@ -40,6 +40,9 @@ function show_props(obj, objName) {
 
 
 function getIDN(dev, data, cb) {
+
+    log("receive data");
+    log(data);
     var id = data.toString().split(',');
     var supportType = sysConstant.supportType;
     // dev.gdsType = '';
@@ -104,6 +107,11 @@ function checkDsoExist(dev, callback) {
                 dev.syncCallback();
             }, 2000);
         }else {
+            // if(dev.gdsType === "GDM8300"){
+            //     console.log("Write CLS");
+            //     dev.write('\r\n*CLS\r\n');
+            // }
+            dev.write('\r\n*CLS\r\n');
             callback();
         }
     }).bind(dev);

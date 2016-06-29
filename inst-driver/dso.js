@@ -1919,6 +1919,58 @@ var _DsoCtrl = function(dsoObj) {
             self.cmdEvent.emit('cmd_write', sysCmd);
         });
     }).bind(dsoObj);
+
+/**
+*
+*
+*/
+    dsoctrl.qrcode = (function(ipaddr) {
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            function setDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve();
+                }
+
+            };
+
+            let sysCmd = [
+                {id:'sys', prop:'QRCode', arg:ipaddr, cb:null, method:'set'},
+                {id:'sys', prop:'QRCodeTitle', arg:ipaddr, cb:setDone, method:'set'}
+            ];
+
+            self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
+            self.cmdEvent.emit('cmd_write', sysCmd);
+        });
+    }).bind(dsoObj);
+/**
+*
+*
+*/
+    dsoctrl.qrcodeTitle = (function(title) {
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            function setDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve();
+                }
+
+            };
+            var sysCmd = [
+                {id:'sys',prop:'QRCodeTitle',arg:title,cb:setDone,method:'set'}
+            ];
+
+            self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
+            self.cmdEvent.emit('cmd_write', sysCmd);
+        });
+    }).bind(dsoObj);
+
 /**
 *   The method belong to dsoctrl class used to set the device into default state
 *
@@ -1988,6 +2040,7 @@ var _DsoCtrl = function(dsoObj) {
 
         console.log("get dso model");
         return new Promise(function(resolve, reject) {
+
             resolve({ model : self.dev.gdsModel , type : self.dev.gdsType });
         });
     }).bind(dsoObj);
@@ -2116,6 +2169,27 @@ var _DsoCtrl = function(dsoObj) {
             self.cmdEvent.emit('cmd_write', sysCmd);
         });
     }).bind(dsoObj);
+/**
+*
+*/
+    dsoctrl.clearEvent = (function() {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+
+            if(self.dev.writeTimeoutObj){
+                clearTimeout(self.dev.writeTimeoutObj);
+            }
+            self.dev.asyncWrite = 'done';
+            self.dev.queryBlock = false;
+            self.dev.state.setTimeout=false;
+            if(self.dev.state.timeoutObj){
+                clearTimeout(self.dev.state.timeoutObj);
+            }
+            resolve();
+        });
+    }).bind(dsoObj);
+
 
 /**
 *
@@ -2150,20 +2224,10 @@ var cmd_write = function() {
                 log('cmd_write reissue');
                 self.dev.writeTimeoutObj = null;
                 cmd_write.call(self);
-            },100);
+            },300);
         }
         return;
     }
-
-    // if (this.dev.cmdSequence.length === 0) {
-    //     if (this.dev.writeTimeoutObj !== null) {
-    //         clearTimeout(this.dev.writeTimeoutObj);
-    //         // this.writeTimeoutObj=null;
-    //         this.dev.emit('cmd_write', self.dev.cmdSequence);
-    //     }
-    //     log('cmdSequence = 0');
-    //     return;
-    // }
 
     for (var i = 0, len = this.dev.cmdSequence.length; i < len; i++) {
         cmd[i] = this.dev.cmdSequence.shift();
@@ -2171,21 +2235,23 @@ var cmd_write = function() {
         // avoid missing async callback, flush command buffer when find cb exist
         if (cmd[i].cb !== null){
             cb = cmd[i].cb;
-            // if(i < len-1 ){
-            //     this.dev.writeTimeoutObj = setTimeout(function() {
-            //         log('cmd_write reissue');
-            //         self.dev.writeTimeoutObj = null;
-            //         // cmd_write.call(self);
-            //         self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
-            //         return;
-            //     },100);
-            // }
             break;
         }
+    }
+    if(this.dev.state.conn ==='disconnect'){
+        if (cb)
+            cb(err);
+        self.dev.asyncWrite = 'done';
+        return;
+    }
+    if(cmd.length === 0){
+        self.dev.asyncWrite = 'done';
+        return;
     }
     self.dev.asyncWrite = 'busy';
     async.eachSeries(cmd,
         function(item,done) {
+            log('async write command');
             log(item);
             if(item.method === 'set') {
                 log(self['sys']);
@@ -2199,13 +2265,18 @@ var cmd_write = function() {
             }
         },function(err, results) {
 
-            if(self.dev.cmdSequence.length !== 0) {
-                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
-            }
             log('err: '+err);
             self.dev.asyncWrite = 'done';
             self.dev.state.conn = 'connected';
             log('async write done');
+
+            if(err){
+                self.dev.cmdSequence = [];
+            }
+            else if(self.dev.cmdSequence.length !== 0) {
+                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
+            }
+
             if (cb)
                 cb(err);
         }

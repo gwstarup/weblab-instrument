@@ -716,6 +716,14 @@
       "parameter_type":"string",
       "parameter":["OFF","ON"]
     },
+    "QRCode":{
+      "command":":QRcode",
+      "parameter_type":"user_string"
+    },
+    "QRCodeTitle":{
+      "command":":QRcode:TITle",
+      "parameter_type":"user_string"
+    },
     "CursorEnable":{
       "command":":EDUcation:CURSor",
       "parameter_type":"string",
@@ -1307,6 +1315,14 @@
       "command":":EDUcation:AUTOSet",
       "parameter_type":"string",
       "parameter":["OFF","ON"]
+    },
+    "QRCode":{
+      "command":":QRcode",
+      "parameter_type":"user_string"
+    },
+    "QRCodeTitle":{
+      "command":":QRcode:TITle",
+      "parameter_type":"user_string"
     },
     "CursorEnable":{
       "command":":EDUcation:CURSor",
