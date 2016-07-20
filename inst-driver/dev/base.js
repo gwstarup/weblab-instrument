@@ -105,7 +105,7 @@ function checkDsoExist(dev, callback) {
                 dev.state.conn = 'timeout';
                 delete dev.state.timeoutObj;
                 dev.syncCallback();
-            }, 2000);
+            }, 5000);
         }else {
             // if(dev.gdsType === "GDM8300"){
             //     console.log("Write CLS");
@@ -197,9 +197,9 @@ var Dev = function() {
         //     return;
         // }
 
-        log('dataHandler receive :' + data.slice(0,20) + ',length=' + data.length);
-        let str = data.toString();
-        log("0x"+str.charCodeAt(str.length -1).toString(16));
+        //log('dataHandler receive :' + data + ',length=' + data.length);
+        // let str = data.toString();
+        // log("0x"+str.charCodeAt(str.length -1).toString(16));
         if(!this.cmdHandler){
             log("cmdHandler not define");
             return;

@@ -476,6 +476,33 @@ var _DmmCtrl = function(dmmObj) {
             }
         });
     }).bind(dmmObj);
+/**
+*
+*/
+    dmmctrl.getMeas = (function(sysProp) {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+            function getDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve(self.sys.val);
+                }
+
+            };
+            var cmd = [];
+
+            log(sysProp);
+
+            cmd.push({id:"sys", prop:"VAL", arg:"", cb:getDone, method:'get'});
+
+            self.dev.cmdSequence = self.dev.cmdSequence.concat(cmd);
+            self.cmdEvent.emit('cmd_write', cmd);
+
+        });
+    }).bind(dmmObj);
 
     ////////////////////////////
     // dmmctrl.onError = (function(callback) {

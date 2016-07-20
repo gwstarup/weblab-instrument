@@ -1708,6 +1708,93 @@ var _AfgCtrl = function(afgObj) {
     }).bind(afgObj);
 
 
+/**
+*   The method belong to afgctrl class used to setup a periodical measure channel with specify measure type
+*   and source channel
+*
+*   @method setMeas
+*   @param {Object} measConf Config to setup a measure channel
+*
+*
+*/
+
+/**
+*
+*   Object used to get a specify data
+*
+*   @property conf
+*   @type Object
+*   @param {String} src1 Specify source channel
+*   @param {String} type Specify channel data
+*/
+    afgctrl.getMeas = (function(conf) {
+      var self = this;
+      var chNum = sysConstant.chID[conf.src1];
+
+      return new Promise(function(resolve, reject) {
+          var cmd=[];
+          function getDone(e){
+              if (e) {
+                  reject(e);
+
+              }else {
+                let val;
+                if(conf.type === "freq"){
+                    val = self[conf.src1].freq;
+                }
+                else if(conf.type === "ampl"){
+                    val = self[conf.src1].ampl;
+                }
+                else if(conf.type === "func"){
+                    val = self[conf.src1].type;
+                }
+                else if(conf.type === "dcoffset"){
+                    val = self[conf.src1].offset;
+                }
+                resolve(val);
+              }
+
+          };
+
+          log('chNum ='+chNum);
+          log('maxChNum ='+self.dev.maxChNum);
+          log(conf);
+
+          if((chNum === undefined) || (chNum >= self.dev.maxChNum)){
+              reject(['400','Parameter Error']);
+              return;
+          }
+
+          if(conf === undefined){
+              reject(['400','Parameter Error']);
+              return;
+          }
+          else{
+
+              if(conf.type === "freq"){
+                  cmd.push({ id:conf.src1, prop:'Freq', arg:"", cb:getDone, method:'get'});
+              }
+              else if(conf.type === "ampl"){
+                  cmd.push({ id:conf.src1, prop:'Ampl', arg:"", cb:getDone, method:'get'});
+              }
+              else if(conf.type === "func"){
+                  cmd.push({ id:conf.src1, prop:'FuncType', arg:"", cb:getDone, method:'get'});
+              }
+              else if(conf.type === "dcoffset"){
+                  cmd.push({ id:conf.src1, prop:'DCOffset', arg:"", cb:getDone, method:'get'});
+              }
+              else{
+                reject(['400','Parameter Error']);
+                return;
+              }
+
+              self.dev.cmdSequence = self.dev.cmdSequence.concat(cmd);
+              self.cmdEvent.emit('cmd_write', cmd);
+          }
+      });
+    }).bind(afgObj);
+
+
     ////////////////////////////
     // afgctrl.onError = (function(callback) {
     //     this.errHandler = callback;

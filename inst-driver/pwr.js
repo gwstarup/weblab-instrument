@@ -649,6 +649,105 @@ var _PwrCtrl = function(pwrObj) {
     }).bind(pwrObj);
 
 /**
+*   The method belong to afgctrl class used to setup a periodical measure channel with specify measure type
+*   and source channel
+*
+*   @method setMeas
+*   @param {Object} measConf Config to setup a measure channel
+*
+*
+*/
+
+/**
+*
+*   Object used to get a specify data
+*
+*   @property conf
+*   @type Object
+*   @param {String} src1 Specify source channel
+*   @param {String} type Specify channel data
+*/
+    pwrctrl.getMeas = (function(conf) {
+       // this.GetSnapshot(callback);
+        var self = this;
+        var chNum = sysConstant.chID[conf.src1];
+        var chCmd;
+
+        return new Promise(function(resolve, reject) {
+            function getDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    let val;
+
+                    if(conf.type === "iout"){
+                        val = self[conf.src1].iout;
+                    }
+                    else if(conf.type === "iset"){
+                        val = self[conf.src1].iset;
+                    }
+                    else if(conf.type === "vset"){
+                        val = self[conf.src1].vset;
+                    }
+                    else if(conf.type === "vout"){
+                        val = self[conf.src1].vout;
+                    }
+                    resolve(val);
+
+                }
+
+            };
+            var cmd=[];
+
+            log('chNum ='+chNum);
+            log('maxChNum ='+self.dev.maxChNum);
+            if(chNum === undefined){
+                reject(['400','Parameter Error']);
+                return;
+            }
+            if(chNum >= self.dev.maxChNum){
+                reject(['400','Parameter Error']);
+                return;
+            }
+            // if(chNum < self.dev.maxChNum) {
+            //     chCmd = chanLoadCmd[chNum].slice(0);
+            //     chCmd[chCmd.length-1].cb = vetical;
+            //     self.dev.cmdSequence = self.dev.cmdSequence.concat(chCmd);
+            //     self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
+            // }
+
+            if(conf.type === "iout"){
+                cmd.push({id:conf.src1, prop:'IOUT', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+            }
+            else if(conf.type === "iset"){
+                cmd.push({id:conf.src1, prop:'ISET', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+            }
+            else if(conf.type === "vset"){
+                cmd.push({id:conf.src1, prop:'VSET', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+            }
+            else if(conf.type === "vout"){
+                cmd.push({id:conf.src1, prop:'VOUT', arg:"", cb:null, method:'get'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+            }
+
+            if(cmd.length > 0){
+                cmd[cmd.length-1].cb = getDone;
+                self.dev.cmdSequence = self.dev.cmdSequence.concat(cmd);
+                // log(self.dev.cmdSequence);
+                self.cmdEvent.emit('cmd_write', cmd);
+            }
+            else{
+                log('setSysProp do nothing');
+                reject(['400','Parameter Error']);
+            }
+        });
+    }).bind(pwrObj);
+
+/**
 *
 */
     pwrctrl.model = (function() {

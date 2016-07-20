@@ -12,6 +12,9 @@ function Measure(){
     this.source1='CH1';
     this.source2='CH2';
     this.type= 'MAXimun';
+    this.msource1='CH1';
+    this.msource2='CH2';
+    this.mtype= 'MAXimun';
     this.temp=0;
 }
 
@@ -51,17 +54,6 @@ Measure.prototype.cmdHandler={
                             return true;
                           }
     },
-    'MeasureType':{
-                getHandler:function(MeasObj,res,cb){
-                            res=res.slice(0,-1);
-                            MeasObj.type=res.toString();
-                            return true;
-                          },
-                setHelper:function(MeasObj,arg,cb){
-                            MeasObj.type=arg;
-                            return true;
-                          }
-    },
     'MeasureState':{
                 getHandler:function(MeasObj,res,cb){
                             res=res.slice(0,-1);
@@ -92,6 +84,50 @@ Measure.prototype.cmdHandler={
                           },
                 setHelper:function(MeasObj,arg,cb){
                             MeasObj.source1=arg;
+                            return true;
+                          }
+    },
+    'MeasureType':{
+                getHandler:function(MeasObj,res,cb){
+                            res=res.slice(0,-1);
+                            MeasObj.value=res.toString();
+                            return true;
+                          },
+                setHelper:function(MeasObj,arg,cb){
+                            MeasObj.type=arg;
+                            return true;
+                          }
+    },
+    'MeasureMeanSource2':{
+                getHandler:function(MeasObj,res,cb){
+                            res=res.slice(0,-1);
+                            MeasObj.msource2=res.toString();
+                            return true;
+                          },
+                setHelper:function(MeasObj,arg,cb){
+                            MeasObj.msource2=arg;
+                            return true;
+                          }
+    },
+    'MeasureMeanSource1':{
+                getHandler:function(MeasObj,res,cb){
+                            res=res.slice(0,-1);
+                            MeasObj.msource1=res.toString();
+                            return true;
+                          },
+                setHelper:function(MeasObj,arg,cb){
+                            MeasObj.msource1=arg;
+                            return true;
+                          }
+    },
+    'MeasureMeanType':{
+                getHandler:function(MeasObj,res,cb){
+                            res=res.slice(0,-1);
+                            MeasObj.mtype=res.toString();
+                            return true;
+                          },
+                setHelper:function(MeasObj,arg,cb){
+                            MeasObj.mtype=arg;
                             return true;
                           }
     }

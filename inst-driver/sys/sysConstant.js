@@ -208,6 +208,6 @@ module.exports ={
     /*
      *  Use to find command table
      */
-    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','MFG2200','GDM8300',"GPDX303S"]
+    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','MFG22X0','GDM8300',"GPDX303S"]
 
 };

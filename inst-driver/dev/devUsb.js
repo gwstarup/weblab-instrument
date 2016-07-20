@@ -48,7 +48,7 @@ function pairUsb(dev,callback){
             }
             else{
                 serialNumber= dev.usb.manufacturer+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
-                usbbaudrate=9600
+                usbbaudrate=115200
             }
             log("serialNumber %x",serialNumber);
 

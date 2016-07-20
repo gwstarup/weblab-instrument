@@ -1701,7 +1701,7 @@ var _DsoCtrl = function(dsoObj) {
 *   The method belong to dsoctrl class used to get the measurment properties
 *   for the selected measure channel from device
 *
-*   @method getMeas
+*   @method getMeasMeanCh
 *   @param {String} mCh Specify which measure channel wants to be loaded
 *   @return {object} measProperty
 *
@@ -1722,7 +1722,7 @@ var _DsoCtrl = function(dsoObj) {
 *   @param {String} state
 */
 
-    dsoctrl.getMeas = (function(mCh) {
+    dsoctrl.getMeasMeanCh = (function(mCh) {
         var self = this;
 
         return new Promise(function(resolve, reject) {
@@ -1796,7 +1796,64 @@ var _DsoCtrl = function(dsoObj) {
 *   @param {String} src2 Specify second source channel for delay measure type
 *   @param {String} type Specify measure type
 */
-    dsoctrl.setMeas = (function(conf) {
+    dsoctrl.getMeas = (function(conf) {
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+            function measCmd(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve(self.meas1.value);
+                }
+
+            };
+            var cmd = [];
+
+            if(conf.src1!==undefined){
+                cmd.push({ id:'meas1', prop:'MeasureSource1', arg:conf.src1.toUpperCase(), cb:null, method:'set'});
+            }
+            if(conf.src2!==undefined){
+                cmd.push({ id:'meas1', prop:'MeasureSource2', arg:conf.src2.toUpperCase(), cb:null, method:'set'});
+            }
+            if(conf.type!==undefined){
+                cmd.push({ id:'meas1', prop:'MeasureType', arg:conf.type, cb:null, method:'get'});
+            }
+            else{
+                measCmd('error');
+                return;
+            }
+
+            if(cmd.length > 0){
+                cmd[cmd.length-1].cb = measCmd;
+                self.dev.cmdSequence = self.dev.cmdSequence.concat(cmd);
+                // log(self.dev.cmdSequence);
+                self.cmdEvent.emit('cmd_write', cmd);
+            }
+        });
+    }).bind(dsoObj);
+/**
+*   The method belong to dsoctrl class used to setup a periodical measure channel with specify measure type
+*   and source channel
+*
+*   @method setMeas
+*   @param {Object} measConf Config to setup a measure channel
+*
+*
+*/
+
+/**
+*
+*   Object used to setup a measure channel
+*
+*   @property measConf
+*   @type Object
+*   @param {String} src1 Specify first source channel for measurement
+*   @param {String} src2 Specify second source channel for delay measure type
+*   @param {String} type Specify measure type
+*/
+    dsoctrl.setMeasMean = (function(conf) {
         var self = this;
 
         return new Promise(function(resolve, reject) {
@@ -1811,16 +1868,16 @@ var _DsoCtrl = function(dsoObj) {
             };
             var measSet = [
                     {id:conf.ch,prop:'MeasureState',arg:'ON',cb:null,method:'set'},
-                    {id:conf.ch,prop:'MeasureSource1',arg:conf.src1.toUpperCase(),cb:null,method:'set'}
+                    {id:conf.ch,prop:'MeasureMeanSource1',arg:conf.src1.toUpperCase(),cb:null,method:'set'}
                 ],
                 measSrc2 = [
-                    {id:conf.ch,prop:'MeasureSource2',arg:conf.src2.toUpperCase(),cb:null,method:'set'}
+                    {id:conf.ch,prop:'MeasureMeanSource2',arg:conf.src2.toUpperCase(),cb:null,method:'set'}
                 ],
                 measType = [
-                    {id:conf.ch,prop:'MeasureType',arg:conf.type,cb:measCmd,method:'set'}
+                    {id:conf.ch,prop:'MeasureMeanType',arg:conf.type,cb:measCmd,method:'set'}
                 ];
             if (conf.type === undefined) {
-                meascmd('error');
+                measCmd('error');
                 return;
             }
 

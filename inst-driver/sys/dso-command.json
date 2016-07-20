@@ -1105,13 +1105,42 @@
     },
     "MeasureSource1":{
       "command":[
+        ":MEASure:SOURce1",":MEASure:SOURce1",":MEASure:SOURce1",":MEASure:SOURce1",
+        ":MEASure:SOURce1",":MEASure:SOURce1",":MEASure:SOURce1",":MEASure:SOURce1"
+      ],
+      "parameter_type":"string",
+      "parameter":["CH1","CH2","CH3","CH4","MATH"]
+    },
+    "MeasureSource2":{
+      "command":[
+        ":MEASure:SOURce2",":MEASure:SOURce2",":MEASure:SOURce2",":MEASure:SOURce2",
+        ":MEASure:SOURce2",":MEASure:SOURce2",":MEASure:SOURce2",":MEASure:SOURce2"
+      ],
+      "parameter_type":"string",
+      "parameter":["CH1","CH2","CH3","CH4","MATH"]
+    },
+    "MeasureType":{
+      "command":[
+        ":MEASure:",":MEASure:",":MEASure:",":MEASure:",
+        ":MEASure:",":MEASure:",":MEASure:",":MEASure:"
+      ],
+      "parameter_type":"bind_para",
+      "parameter":[
+        "PK2pk","MAXimum","MINImum","AMPlitude","LOW","MEAN","CMEan","RMS","CRMs","AREa","CARea",
+        "ROVShoot","FOVShoot","RPReshoot","FPReshoot","FREQuency","PERIod","RISe","FALL","PWIdth",
+        "NWIdth","PDUTy","PPULSE","NPULSE","PEDGE","PERIod","NEDGE","FRRDelay","FRFDelay",
+        "FFRDelay","FFFDelay","LRRDelay","LRFDelay","LFRDelay","LFFDelay","PHAse"
+      ]
+    },
+    "MeasureMeanSource1":{
+      "command":[
         ":MEASUrement:MEAS1:SOURCE1",":MEASUrement:MEAS2:SOURCE1",":MEASUrement:MEAS3:SOURCE1",":MEASUrement:MEAS4:SOURCE1",
         ":MEASUrement:MEAS5:SOURCE1",":MEASUrement:MEAS6:SOURCE1",":MEASUrement:MEAS7:SOURCE1",":MEASUrement:MEAS8:SOURCE1"
       ],
       "parameter_type":"string",
       "parameter":["CH1","CH2","CH3","CH4","MATH"]
     },
-    "MeasureSource2":{
+    "MeasureMeanSource2":{
       "command":[
         ":MEASUrement:MEAS1:SOURCE2",":MEASUrement:MEAS2:SOURCE2",":MEASUrement:MEAS3:SOURCE2",":MEASUrement:MEAS4:SOURCE2",
         ":MEASUrement:MEAS5:SOURCE2",":MEASUrement:MEAS6:SOURCE2",":MEASUrement:MEAS7:SOURCE2",":MEASUrement:MEAS8:SOURCE2"
@@ -1119,7 +1148,7 @@
       "parameter_type":"string",
       "parameter":["CH1","CH2","CH3","CH4","MATH"]
     },
-    "MeasureType":{
+    "MeasureMeanType":{
       "command":[
         ":MEASUrement:MEAS1:TYPe",":MEASUrement:MEAS2:TYPe",":MEASUrement:MEAS3:TYPe",":MEASUrement:MEAS4:TYPe",
         ":MEASUrement:MEAS5:TYPe",":MEASUrement:MEAS6:TYPe",":MEASUrement:MEAS7:TYPe",":MEASUrement:MEAS8:TYPe"

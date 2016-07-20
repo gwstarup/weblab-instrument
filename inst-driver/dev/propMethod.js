@@ -10,6 +10,8 @@ var error = debug('method:error');
 
 var autosetWaitTimeObj = null;
 function checkParameterString(arg, par) {
+    console.log("checkParameterString :"+ arg + " vs " + par);
+
     for (var i=0; i<par.length; i++) {
         if (arg.toUpperCase() === par[i].toUpperCase())
             return true;
@@ -34,10 +36,20 @@ function Method(id) {
 
                         if (this.commandObj[this.dev.gdsType][prop].command[0].length > 1) {
                             log('id=' + id);
-                            cmd = this.commandObj[this.dev.gdsType][prop].command[chID[id]] + '?\r\n';
+                            if( this.commandObj[this.dev.gdsType][prop].parameter_type === "bind_para"){
+                                cmd = this.commandObj[this.dev.gdsType][prop].command[chID[id]] + res.toString() + '?\r\n';
+                            }
+                            else{
+                                cmd = this.commandObj[this.dev.gdsType][prop].command[chID[id]] + '?\r\n';
+                            }
                         }
                         else {
-                            cmd = this.commandObj[this.dev.gdsType][prop].command + '?\r\n';
+                            if( this.commandObj[this.dev.gdsType][prop].parameter_type === "bind_para"){
+                                cmd = this.commandObj[this.dev.gdsType][prop].command + res.toString() + '?\r\n';
+                            }
+                            else{
+                                cmd = this.commandObj[this.dev.gdsType][prop].command + '?\r\n';
+                            }
                         }
 
                         log('getProp cmd=' + cmd);
@@ -121,6 +133,15 @@ function Method(id) {
 
                             if (checkParameterString(arg, rangeLimit.parameter)) {
                                 cmd +=' '+arg+'\r\n';
+                            }else {
+                                if (callback)
+                                    callback(['100','\''+arg+'\' argument not supported','cmd '+cmd]);
+                                return;
+                            }
+                        }
+                        else if(rangeLimit.parameter_type === 'bind_para'){
+                            if (checkParameterString(arg, rangeLimit.parameter)) {
+                                cmd += arg+'\r\n';
                             }else {
                                 if (callback)
                                     callback(['100','\''+arg+'\' argument not supported','cmd '+cmd]);
