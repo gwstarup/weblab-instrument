@@ -295,6 +295,7 @@ module.exports = {
         return supportDevice[i].type;
       }
     }
+    return null;
   }
 
 
