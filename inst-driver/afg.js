@@ -1947,7 +1947,6 @@ var _AfgCtrl = function(afgObj) {
     afgctrl.model = (function() {
         var self = this;
 
-        console.log("get afg model");
         return new Promise(function(resolve, reject) {
 
             resolve(self.dev.gdsModel);

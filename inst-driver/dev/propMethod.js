@@ -10,7 +10,6 @@ var error = debug('method:error');
 
 var autosetWaitTimeObj = null;
 function checkParameterString(arg, par) {
-    console.log("checkParameterString :"+ arg + " vs " + par);
 
     for (var i=0; i<par.length; i++) {
         if (arg.toUpperCase() === par[i].toUpperCase())

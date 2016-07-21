@@ -753,7 +753,6 @@ var _PwrCtrl = function(pwrObj) {
     pwrctrl.model = (function() {
         var self = this;
 
-        console.log("get power model");
         return new Promise(function(resolve, reject) {
 
             resolve(self.dev.gdsModel);

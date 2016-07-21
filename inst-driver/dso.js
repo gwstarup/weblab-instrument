@@ -2095,7 +2095,6 @@ var _DsoCtrl = function(dsoObj) {
     dsoctrl.model = (function() {
         var self = this;
 
-        console.log("get dso model");
         return new Promise(function(resolve, reject) {
 
             resolve({ model : self.dev.gdsModel , type : self.dev.gdsType });
