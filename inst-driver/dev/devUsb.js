@@ -59,7 +59,7 @@ function pairUsb(dev,callback){
                         setTimeout(function(){
                             var device=null;
 
-                            dev.usb.device= new usbPort.SerialPort(port.comName,{baudrate: usbbaudrate,encoding:'binary'},false);
+                            dev.usb.device= new usbPort(port.comName,{baudrate: usbbaudrate,encoding:'binary', autoOpen : false});
                             // util.inherits(dev.usb,events.EventEmitter);
                             log('---------------------');
                             log(dev.usb.device);
