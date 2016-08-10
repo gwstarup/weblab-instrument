@@ -193,11 +193,12 @@ module.exports ={
      */
     supportDevice : {
                         GDS2004A:{vid:'0x2184',pid:'0x0014',type:'DSO'},
+                        GDS2002A:{vid:'0x2184',pid:'0x0013',type:'DSO'},
                         GDS2002E:{vid:'0x2184',pid:'0x003f',type:'DSO'},
                         GDS2004E:{vid:'0x2184',pid:'0x0040',type:'DSO'},
-                        DCS2002E:{vid:'0x098f',pid:'0x0043',type:'DSO'},
+                        DCS2002E:{vid:'0x098f',pid:'0x2204',type:'DSO'},
                         GDS1002B:{vid:'0x2184',pid:'0x0044',type:'DSO'},
-                        GDS1004B:{vid:'0x2184',pid:'0x2204',type:'DSO'},
+                        GDS1004B:{vid:'0x2184',pid:'0x0043',type:'DSO'},
                         AFG2225:{vid:'0x2184',pid:'0x001C',type:'AFG'},
                         MFG2100:{vid:'0x2184',pid:'0x0050',type:'AFG'},
                         MFG2200:{vid:'0x2184',pid:'0x004E',type:'AFG'},

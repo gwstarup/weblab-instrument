@@ -73,7 +73,7 @@ function Method(id) {
                                 self.dev.errHandler(self);
                             }
                             callback(["408", "command : " + self.dev.state.currentCmd + "," + " timeout"]); //call async done function
-
+                            return;
                         }, 15000);
 
                         this.dev.cmdHandler = this[id].cmdHandler[prop].getHandler;

@@ -119,8 +119,8 @@ var _DsoObj = function() {
     this.commandObj = getCmdObj();
     this.dev.commandObj = this.commandObj;
     this.dev.errHandler = function setToDefautl(self){
-        log("errHandler: id =");
-        log(self);
+        log("Call errHandler");
+
         if(self[self.dev.state.currentId].setToDefault)
             self[self.dev.state.currentId].setToDefault(self[self.dev.state.currentId]);
     };
@@ -2270,7 +2270,7 @@ var cmd_write = function() {
     var cb = null;
 
     var cmd = [];
-    // log(this.dev.cmdSequence);
+    log(this.dev.cmdSequence);
     if (this.dev.asyncWrite === 'busy') {
         log('async write busy');
         log(this.dev.cmdSequence);
@@ -2328,6 +2328,10 @@ var cmd_write = function() {
 
             if(err){
                 self.dev.cmdSequence = [];
+                self.dev.usbDisconnect( function(){
+                    self.dev.usbConnect(cb).bind(self.dev);
+                }).bind(self.dev);
+                return;
             }
             else if(self.dev.cmdSequence.length !== 0) {
                 self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);

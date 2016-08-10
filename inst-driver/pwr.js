@@ -754,8 +754,9 @@ var _PwrCtrl = function(pwrObj) {
         var self = this;
 
         return new Promise(function(resolve, reject) {
+            var serialNumber = self.dev.usb.serialNumber;
 
-            resolve(self.dev.gdsModel);
+            resolve({devModel: self.dev.gdsModel, serialNumber: serialNumber});
         });
     }).bind(pwrObj);
 /**

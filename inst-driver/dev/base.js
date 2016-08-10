@@ -42,7 +42,7 @@ function show_props(obj, objName) {
 function getIDN(dev, data, cb) {
 
     log("receive data");
-    log(data);
+    console.log(data);
     var id = data.toString().split(',');
     var supportType = sysConstant.supportType;
     // dev.gdsType = '';
@@ -58,6 +58,11 @@ function getIDN(dev, data, cb) {
                 if (id[1] === gdsModel[i]) {
                     dev.gdsType = supportType[j];
                     dev.gdsModel = id[1];
+                    if(dev.gdsType === 'GPDX303S'){
+
+                        dev.usb.serialNumber = id[2].slice(3);
+
+                    }
                     dev.maxChNum = dev.commandObj[supportType[j]].maxChNum[gdsModel[i]];
                     break;
                 }
@@ -71,6 +76,7 @@ function getIDN(dev, data, cb) {
     //cb(null,data);
     return true;
 }
+
 function checkDsoExist(dev, callback) {
     var timeoutCnt = 0;
     var tcnt;
@@ -144,6 +150,7 @@ function checkDsoExist(dev, callback) {
     }
 
 };
+
 var Dev = function() {
     // dsoObj.state='connectting';
     this.state = {
@@ -197,7 +204,7 @@ var Dev = function() {
         //     return;
         // }
 
-        //log('dataHandler receive :' + data + ',length=' + data.length);
+        // console.log('dataHandler receive :' + data + ',length=' + data.length);
         // let str = data.toString();
         // log("0x"+str.charCodeAt(str.length -1).toString(16));
         if(!this.cmdHandler){
@@ -242,6 +249,7 @@ var Dev = function() {
     }).bind(this);
     return this;
 }
+
 Dev.prototype.onSocketErr=function(cb) {
     var self = this;
     this.net.socket.on('error', function(e) {
@@ -270,7 +278,7 @@ Dev.prototype.tcpConnect = function(Callback) {
                       self.interf = 'net';
                       // self.net.socket.on('data',self.net.dataHandler);
                       self.net.socket.on('data',self.dataHandler);
-                      checkDsoExist(self,Callback);
+                      self.checkDsoExist(self,Callback);
                       // if(Callback)
                       //   Callback();
                 });
@@ -311,6 +319,7 @@ Dev.prototype.usbConnect = function(Callback) {
         }
     });
 };
+
 Dev.prototype.usbDisconnect = function(Callback) {
     var self = this;
 

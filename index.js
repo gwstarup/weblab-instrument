@@ -197,8 +197,9 @@ module.exports = {
               devDri.connect()
                 .then(function(){
                   log('pwr connect done');
-                  devDri.model().then(function(devModel){
-                    device.deviceName = devModel;
+                  devDri.model().then(function(info){
+                    device.deviceName = info.devModel;
+                    device.serialNumber = info.serialNumber;
                     connectedDevice.push({id:id,devInfo:device,devDri:devDri});
                     log(connectedDevice);
                     callback('',id);
