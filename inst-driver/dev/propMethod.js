@@ -64,8 +64,7 @@ function Method(id) {
                         this.dev.state.currentCmd = cmd;
                         this.dev.state.currentId = id;
                         this.dev.state.setTimeout = true;
-
-                        this.dev.state.timeoutObj = setTimeout(function() {
+                        this.dev.state.timeoutCb = function(){
                             console.log('!!!!!!!query timeout: cmd ='+self.dev.state.currentCmd);
                             self.dev.queryBlock = false;
                             self.dev.state.conn = 'timeout';
@@ -73,8 +72,19 @@ function Method(id) {
                                 self.dev.errHandler(self);
                             }
                             callback(["408", "command : " + self.dev.state.currentCmd + "," + " timeout"]); //call async done function
+                        };
+
+                        this.dev.state.timeoutObj = setTimeout(function() {
+                            // console.log('!!!!!!!query timeout: cmd ='+self.dev.state.currentCmd);
+                            // self.dev.queryBlock = false;
+                            // self.dev.state.conn = 'timeout';
+                            // if(self.dev.errHandler){
+                            //     self.dev.errHandler(self);
+                            // }
+                            // callback(["408", "command : " + self.dev.state.currentCmd + "," + " timeout"]); //call async done function
+                            self.dev.state.timeoutCb();
                             return;
-                        }, 15000);
+                        }, 5000);
 
                         this.dev.cmdHandler = this[id].cmdHandler[prop].getHandler;
                         this.dev.handlerSelf = this[id];

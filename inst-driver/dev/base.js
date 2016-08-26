@@ -106,11 +106,14 @@ function checkDsoExist(dev, callback) {
         if(dev.gdsType ==='') {
             dev.state.setTimeout = true;
             dev.write('\r\n*IDN?\r\n');
+            // dev.state.timeoutCb = function(){
+            //     log('timeout');
+            //     dev.state.conn = 'timeout';
+            //     delete dev.state.timeoutObj;
+            //     dev.syncCallback();
+            // };
             dev.state.timeoutObj = setTimeout(function() {
-                log('timeout');
-                dev.state.conn = 'timeout';
-                delete dev.state.timeoutObj;
-                dev.syncCallback();
+                dev.state.timeoutCb();
             }, 5000);
         }else {
             // if(dev.gdsType === "GDM8300"){
@@ -122,11 +125,16 @@ function checkDsoExist(dev, callback) {
         }
     }).bind(dev);
 
-    dev.state.timeoutObj = setTimeout(function() {
+    dev.state.timeoutCb = function(){
         log('timeout');
         dev.state.conn = 'timeout';
         dev.state.timeoutObj=null;
         dev.syncCallback();
+    };
+
+    console.log("tcnt = "+ tcnt);
+    dev.state.timeoutObj = setTimeout(function() {
+        dev.state.timeoutCb();
     }, tcnt);
 
     if(dev.usb.pid === 24577){
@@ -159,6 +167,7 @@ var Dev = function() {
         currentId : '',
         setTimeout : false,
         timeoutObj : {},
+        timeoutCb : function(){},
         errCode : {message:'', type:'', handler:function(){}}
     };
     // this.port=port;
@@ -196,6 +205,8 @@ var Dev = function() {
         // return true;
     };
     this.dataHandler = (function(data) {
+        let cmdDone = false;
+        let self = this;
         // if ((data === 0x0a) && (data.length === 1)) {
         //     log('receive one byte data');
         //     log(Number(data));
@@ -208,13 +219,21 @@ var Dev = function() {
         // let str = data.toString();
         // log("0x"+str.charCodeAt(str.length -1).toString(16));
         if(!this.cmdHandler){
+            console.log('dataHandler receive :' + data + ',length=' + data.length);
             log("cmdHandler not define");
             return;
         }
+
+        if(this.state.setTimeout){
+            clearTimeout(this.state.timeoutObj);
+        }
+
         if(this.queryBlock !== true){
             this.recData += data.slice();
             if(data[data.length-1] === 0x0a){
                 if (this.cmdHandler(this.handlerSelf, this.recData,this.syncCallback) ===true) {
+
+                    cmdDone = true;
                     if (this.state.setTimeout) {
                         // if(this.state.conn!=='timeout'){
                             log('clearTimeout');
@@ -233,19 +252,30 @@ var Dev = function() {
         }
         else{
             if (this.cmdHandler(this.handlerSelf, data,this.syncCallback) ===true) {
+
+                cmdDone = true;
                 if (this.state.setTimeout) {
                     // if(this.state.conn!=='timeout'){
-                        log('clearTimeout');
+                        log('clearTimeout by queryBlock');
                         clearTimeout(this.state.timeoutObj);
                     // }
                     this.state.setTimeout=false;
                 }
                 if (typeof this.syncCallback === 'function') {
-                    log('call callback');
+                    log('call callback by queryBlock');
                     this.syncCallback();
                 }
             }
         }
+
+        if(cmdDone != true){
+            if (this.state.setTimeout) {
+                this.state.timeoutObj = setTimeout(function() {
+                    self.state.timeoutCb();
+                }, 3000);
+            }
+        }
+
     }).bind(this);
     return this;
 }

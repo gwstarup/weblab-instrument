@@ -227,12 +227,12 @@ var _PwrCtrl = function(pwrObj) {
 
             log("pwr getSetup");
             cmd.push({id:'sys', prop:'SysRemote', arg:"1", cb:null, method:'set'});
-            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 200, cb:null, method:'set'});
+            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
                 cmd.push({id:chID[i], prop:'ISET', arg:"", cb:null, method:'get'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'VSET', arg:"", cb:null, method:'get'})
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
             }
             cmd.push({id:'sys', prop:'STATUS', arg:"", cb:getDone, method:'get'});
             self.dev.cmdSequence = self.dev.cmdSequence.concat(cmd);
@@ -265,12 +265,14 @@ var _PwrCtrl = function(pwrObj) {
             log(setup);
 
             cmd.push({id:'sys', prop:'SysRemote', arg:"1", cb:null, method:'set'});
-            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
+            cmd.push({id:'sys', prop:'TRACK', arg:"0", cb:null, method:'set'});
+            cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
             for(i=0; i<self.dev.maxChNum; i++){
                 cmd.push({id:chID[i], prop:'ISET', arg: setup.chProps[chID[i]].iset.slice(0,-2), cb:null, method:'set'});
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
                 cmd.push({id:chID[i], prop:'VSET', arg: setup.chProps[chID[i]].vset.slice(0,-2), cb:null, method:'set'})
-                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 300, cb:null, method:'set'});
+                cmd.push({id:"sys", prop: 'delay_for_a_while', arg : 400, cb:null, method:'set'});
             }
             if((setup.status[2]==="1") && (setup.status[3]==="0")){
                 track="2";//PARA
@@ -310,7 +312,7 @@ var _PwrCtrl = function(pwrObj) {
 
             var sysCmd = [
                 {id:'sys',prop:'STATUS',arg:'',cb:null,method:'get'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:getDone, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:getDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -338,7 +340,7 @@ var _PwrCtrl = function(pwrObj) {
             };
             var sysCmd = [
                 {id:'sys',prop:'TRACK',arg:arg,cb:null,method:'set'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -366,7 +368,7 @@ var _PwrCtrl = function(pwrObj) {
             };
             var sysCmd = [
                 {id:'sys',prop:'BEEP',arg:arg,cb:null,method:'set'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -395,7 +397,7 @@ var _PwrCtrl = function(pwrObj) {
 
             var sysCmd = [
                 {id:'sys',prop:'OUT',arg:arg,cb:null,method:'set'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:setDone, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:setDone, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -427,11 +429,11 @@ var _PwrCtrl = function(pwrObj) {
 
             if(sysProp.track!==undefined){
                 cmd.push({id:"sys", prop:"TRACK", arg:sysProp.track, cb:null, method:'set'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(sysProp.out!==undefined){
                 cmd.push({id:"sys", prop:"OUT", arg:sysProp.out, cb:null, method:'set'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(cmd.length > 0){
                 cmd[cmd.length-1].cb = setDone;
@@ -501,19 +503,19 @@ var _PwrCtrl = function(pwrObj) {
 
             if(chProp.iout!==undefined){
                 cmd.push({id:chProp.ch, prop:'IOUT', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(chProp.vout!==undefined){
                 cmd.push({id:chProp.ch, prop:'VOUT', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(chProp.iset!==undefined){
                 cmd.push({id:chProp.ch, prop:'ISET', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(chProp.vset!==undefined){
                 cmd.push({id:chProp.ch, prop:'VSET', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
 
             if(cmd.length > 0){
@@ -566,11 +568,11 @@ var _PwrCtrl = function(pwrObj) {
             }
             if(chProp.iset!==undefined){
                 cmd.push({id:chProp.ch, prop:'ISET', arg:chProp.iset, cb:null, method:'set'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(chProp.vset!==undefined){
                 cmd.push({id:chProp.ch, prop:'VSET', arg:chProp.vset, cb:null, method:'set'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             if(cmd.length > 0){
                 cmd[cmd.length-1].cb = setDone;
@@ -612,7 +614,7 @@ var _PwrCtrl = function(pwrObj) {
             };
             var sysCmd = [
                 {id:'sys',prop:'SysLocal',arg:'',cb:null,method:'set'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:sysLocal, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:sysLocal, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -640,7 +642,7 @@ var _PwrCtrl = function(pwrObj) {
             };
             var sysCmd = [
                 {id:'sys',prop:'SysRemote',arg:'',cb:null,method:'set'},
-                {id:'sys', prop:'delay_for_a_while', arg: 200, cb:sysRemote, method:'set'}
+                {id:'sys', prop:'delay_for_a_while', arg: 400, cb:sysRemote, method:'set'}
             ];
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
@@ -719,19 +721,19 @@ var _PwrCtrl = function(pwrObj) {
 
             if(conf.type === "iout"){
                 cmd.push({id:conf.src1, prop:'IOUT', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             else if(conf.type === "iset"){
                 cmd.push({id:conf.src1, prop:'ISET', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             else if(conf.type === "vset"){
                 cmd.push({id:conf.src1, prop:'VSET', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
             else if(conf.type === "vout"){
                 cmd.push({id:conf.src1, prop:'VOUT', arg:"", cb:null, method:'get'});
-                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 200, cb:null, method:'set'});
+                cmd.push({id:'sys', prop:'delay_for_a_while', arg: 400, cb:null, method:'set'});
             }
 
             if(cmd.length > 0){
@@ -809,11 +811,13 @@ var cmd_write = function() {
             this.dev.writeTimeoutObj = setTimeout(function() {
                 log('cmd_write reissue');
                 self.dev.writeTimeoutObj = null;
-                cmd_write.call(self);
+                //cmd_write.call(self);
+                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
             },300);
         }
         return;
     }
+
 
     for (var i = 0, len = this.dev.cmdSequence.length; i < len; i++) {
         cmd[i] = this.dev.cmdSequence.shift();
@@ -824,6 +828,18 @@ var cmd_write = function() {
             break;
         }
     }
+
+    if(self.dev.state.conn ==='disconnect'){
+        if (cb)
+            cb("device disconnect");
+        self.dev.asyncWrite = 'done';
+        return;
+    }
+    if(cmd.length === 0){
+        self.dev.asyncWrite = 'done';
+        return;
+    }
+
     self.dev.asyncWrite = 'busy';
     async.eachSeries(cmd,
         function(item,done) {
@@ -836,16 +852,26 @@ var cmd_write = function() {
             }
         },function(err, results) {
 
+            log('err: '+err);
+            self.dev.asyncWrite = 'done';
+            self.dev.state.conn = 'connected';
+            log('pwr async write done');
+
+            if(self.dev.writeTimeoutObj)
+                clearTimeout(self.dev.writeTimeoutObj);
+
             if(err){
                 self.dev.cmdSequence = [];
+
+                self.dev.usbDisconnect( function(){
+                    self.dev.usbConnect(cb).bind(self.dev);
+                }).bind(self.dev);
+                return;
             }
             else if(self.dev.cmdSequence.length !== 0) {
                 self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
             }
-            log('err: '+err);
-            self.dev.asyncWrite = 'done';
-            self.dev.state.conn = 'connected';
-            log('async write done');
+
             if (cb)
                 cb(err);
         }

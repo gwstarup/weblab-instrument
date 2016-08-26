@@ -2270,23 +2270,24 @@ var cmd_write = function() {
     var cb = null;
 
     var cmd = [];
-    log(this.dev.cmdSequence);
-    if (this.dev.asyncWrite === 'busy') {
+    log(self.dev.cmdSequence);
+    if (self.dev.asyncWrite === 'busy') {
         log('async write busy');
-        log(this.dev.cmdSequence);
-        if (this.dev.writeTimeoutObj === null) {
+        log(self.dev.cmdSequence);
+        if (self.dev.writeTimeoutObj === null) {
             log('set timeout retry cmd_write');
-            this.dev.writeTimeoutObj = setTimeout(function() {
+            self.dev.writeTimeoutObj = setTimeout(function() {
                 log('cmd_write reissue');
                 self.dev.writeTimeoutObj = null;
-                cmd_write.call(self);
+                // cmd_write.call(self);
+                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
             },300);
         }
         return;
     }
 
-    for (var i = 0, len = this.dev.cmdSequence.length; i < len; i++) {
-        cmd[i] = this.dev.cmdSequence.shift();
+    for (var i = 0, len = self.dev.cmdSequence.length; i < len; i++) {
+        cmd[i] = self.dev.cmdSequence.shift();
 
         // avoid missing async callback, flush command buffer when find cb exist
         if (cmd[i].cb !== null){
@@ -2294,9 +2295,9 @@ var cmd_write = function() {
             break;
         }
     }
-    if(this.dev.state.conn ==='disconnect'){
+    if(self.dev.state.conn ==='disconnect'){
         if (cb)
-            cb(err);
+            cb("device disconnect");
         self.dev.asyncWrite = 'done';
         return;
     }
@@ -2310,7 +2311,7 @@ var cmd_write = function() {
             log('async write command');
             log(item);
             if(item.method === 'set') {
-                log(self['sys']);
+                // log(self['sys']);
                 self[item.id].prop.set(item.prop, item.arg, function(err){
                     done(err);
                 });
@@ -2326,8 +2327,12 @@ var cmd_write = function() {
             self.dev.state.conn = 'connected';
             log('async write done');
 
+            if(self.dev.writeTimeoutObj)
+                clearTimeout(self.dev.writeTimeoutObj);
+
             if(err){
                 self.dev.cmdSequence = [];
+
                 self.dev.usbDisconnect( function(){
                     self.dev.usbConnect(cb).bind(self.dev);
                 }).bind(self.dev);

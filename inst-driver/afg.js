@@ -2002,11 +2002,13 @@ var cmd_write = function() {
             this.dev.writeTimeoutObj = setTimeout(function() {
                 log('cmd_write reissue');
                 self.dev.writeTimeoutObj = null;
-                cmd_write.call(self);
+                //cmd_write.call(self);
+                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
             },300);
         }
         return;
     }
+
 
     for (var i = 0, len = this.dev.cmdSequence.length; i < len; i++) {
         cmd[i] = this.dev.cmdSequence.shift();
@@ -2017,6 +2019,18 @@ var cmd_write = function() {
             break;
         }
     }
+
+    if(self.dev.state.conn ==='disconnect'){
+        if (cb)
+            cb("device disconnect");
+        self.dev.asyncWrite = 'done';
+        return;
+    }
+    if(cmd.length === 0){
+        self.dev.asyncWrite = 'done';
+        return;
+    }
+
     self.dev.asyncWrite = 'busy';
     async.eachSeries(cmd,
         function(item,done) {
@@ -2029,16 +2043,26 @@ var cmd_write = function() {
             }
         },function(err, results) {
 
+            log('err: '+err);
+            self.dev.asyncWrite = 'done';
+            self.dev.state.conn = 'connected';
+            log('pwr async write done');
+
+            if(self.dev.writeTimeoutObj)
+                clearTimeout(self.dev.writeTimeoutObj);
+
             if(err){
                 self.dev.cmdSequence = [];
+
+                self.dev.usbDisconnect( function(){
+                    self.dev.usbConnect(cb).bind(self.dev);
+                }).bind(self.dev);
+                return;
             }
             else if(self.dev.cmdSequence.length !== 0) {
                 self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
             }
-            log('err: '+err);
-            self.dev.asyncWrite = 'done';
-            self.dev.state.conn = 'connected';
-            log('async write done');
+
             if (cb)
                 cb(err);
         }
