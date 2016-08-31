@@ -204,11 +204,12 @@ module.exports ={
                         MFG2200:{vid:'0x2184',pid:'0x004E',type:'AFG'},
                         GDM8342:{vid:'0x2184',pid:'0x0030',type:'DMM'},
                         GDM835X:{vid:'0x2184',pid:'0x003B',type:'DMM'},
+                        GDM826X:{vid:'0x2184',pid:'0x001a',type:'DMM'},
                         GPD4303S:{vid:'0x0403',pid:'0x6001',type:'PWS'},
                     },
     /*
      *  Use to find command table
      */
-    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','MFG22X0','GDM8300',"GPDX303S"]
+    supportType : ['GDS2000E','GDS1000B','GDS2000A','AFG2200','MFG22X0','GDM8300','GDM8200',"GPDX303S"]
 
 };
