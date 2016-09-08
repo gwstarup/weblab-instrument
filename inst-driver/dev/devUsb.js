@@ -52,7 +52,7 @@ function pairUsb(dev,callback){
             }
             log("serialNumber %x",serialNumber);
 
-            if(ports[i].serialNumber === serialNumber){
+            if(ports[i].serialNumber === serialNumber || ports[i].productId == 24577){
                 log("serialNumber match");
                 if(dev.state.conn!=='connected'){
                     var port=ports[i];

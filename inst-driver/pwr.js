@@ -843,7 +843,7 @@ var cmd_write = function() {
     self.dev.asyncWrite = 'busy';
     async.eachSeries(cmd,
         function(item,done) {
-            log(item);
+            // log(item);
             if(item.method === 'set') {
                 log(self['sys']);
                 self[item.id].prop.set(item.prop, item.arg, done);
