@@ -353,16 +353,22 @@ Dev.prototype.usbConnect = function(Callback) {
 Dev.prototype.usbDisconnect = function(Callback) {
     var self = this;
 
-    usbDev.closeUsb(this, function(err) {
-        if(err){
-            console.log(err);
-        }
-        self.state.conn='disconnected';
-        self.usb.device=null;
-        self.interf='empty';
-        if(Callback)
-            Callback(err);
-    });
+    // if(self.state.conn === 'connected'){
+        usbDev.closeUsb(this, function(err) {
+            if(err){
+                console.log(err);
+            }
+            self.state.conn='disconnected';
+            self.usb.device=null;
+            self.interf='empty';
+            if(Callback)
+                Callback(err);
+        });
+    // }
+    // else{
+    //     if(Callback)
+    //         Callback();
+    // }
 };
 
 

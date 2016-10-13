@@ -853,23 +853,29 @@ var cmd_write = function() {
         },function(err, results) {
 
             log('err: '+err);
-            self.dev.asyncWrite = 'done';
-            self.dev.state.conn = 'connected';
-            log('pwr async write done');
+            log('async write done');
 
             if(self.dev.writeTimeoutObj)
                 clearTimeout(self.dev.writeTimeoutObj);
 
             if(err){
-                self.dev.cmdSequence = [];
-
                 self.dev.usbDisconnect( function(){
-                    self.dev.usbConnect(cb).bind(self.dev);
-                }).bind(self.dev);
+                    self.dev.usbConnect( function(){
+                        self.dev.cmdSequence = [];
+                        self.dev.asyncWrite = 'done';
+                        if(cb)
+                            cb(err);
+                    });
+                });
                 return;
             }
-            else if(self.dev.cmdSequence.length !== 0) {
-                self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
+            else{
+                self.dev.asyncWrite = 'done';
+                self.dev.state.conn = 'connected';
+                if(self.dev.cmdSequence.length !== 0) {
+                    self.cmdEvent.emit('cmd_write', self.dev.cmdSequence);
+
+                }
             }
 
             if (cb)
