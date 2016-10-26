@@ -30,7 +30,6 @@ SWEEP.prototype.cmdHandler = {
                         sweepObj.state = arg;
                   },
         getHandler : function(sweepObj, res, cb){
-                        console.log(res);
                         res = res.slice(0, -1);
                         sweepObj.state = res.toString();
                         return true;

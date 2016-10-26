@@ -59,7 +59,13 @@ function pairUsb(dev,callback){
                         setTimeout(function(){
                             var device=null;
 
-                            dev.usb.device= new usbPort(port.comName,{baudrate: usbbaudrate,encoding:'binary', autoOpen : false});
+                            dev.usb.device= new usbPort(port.comName,{
+                                baudrate: usbbaudrate,
+                                encoding:'binary',
+                                lock: false,
+                                autoOpen: false
+                            });
+
                             // util.inherits(dev.usb,events.EventEmitter);
                             log('---------------------');
                             log(dev.usb.device);
@@ -67,7 +73,7 @@ function pairUsb(dev,callback){
                             dev.interf='usb';
 
                             if(dev.usb.device.isOpen()){
-                                log('USB device already opened');
+                                console.log('USB device already opened');
                                 if(callback)
                                     callback();
                             }else{
@@ -84,7 +90,7 @@ function pairUsb(dev,callback){
                                 dev.usb.device.open(function (error) {
                                     if(error){
                                         console.log('error msg: ' + error);
-                                        if(errCnt >5){
+                                        if(errCnt++ >5){
                                             if(callback)
                                                 callback(error);
                                         }
@@ -98,29 +104,32 @@ function pairUsb(dev,callback){
                                     }
                                     errCnt =0;
                                     // dev.usb.device = device;
-                                    dev.state.conn='connected';
-                                    log('open USB device');
+                                    dev.usb.device.flush( () => {
+                                        dev.state.conn='connected';
+                                        log('open USB device');
 
-                                    dev.usb.device.on('data',dev.dataHandler);
-                                    dev.state.conn='connected';
+                                        dev.usb.device.on('data',dev.dataHandler);
+                                        dev.state.conn='connected';
 
-                                    dev.usb.device.on('disconnect', function(err,dataObj){
-                                        console.log("usb disconnect");
-                                        console.log(err);
-                                        console.log(dev);
-                                        dev.state.conn!=='disconnected';
-                                        dev.usb.device=null;
-                                        dev.interf='empty';
-                                        console.log("-----------------");
+                                        dev.usb.device.on('disconnect', function(err,dataObj){
+                                            console.log("usb disconnect");
+                                            console.log(err);
+                                            console.log(dev);
+                                            dev.state.conn!=='disconnected';
+                                            dev.usb.device=null;
+                                            dev.interf='empty';
+                                            console.log("-----------------");
+                                        });
+
+                                        if(callback){
+                                            log('paireUsb success');
+                                            callback(error);
+                                        }
+                                        else{
+                                            console.log('paireUsb success without callback');
+                                        }
                                     });
 
-                                    if(callback){
-                                        log('paireUsb success');
-                                        callback(error);
-                                    }
-                                    else{
-                                        console.log('paireUsb success without callback');
-                                    }
                                 });
 
                             }
