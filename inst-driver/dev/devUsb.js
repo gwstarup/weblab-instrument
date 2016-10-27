@@ -298,7 +298,9 @@ exports.listUsbDevice=function(callback){
             var port = ports[i];
             for(j in supportDevice){
                 var info,k,len_k,manuf='';
-                if(port.vendorId === supportDevice[j].vid){
+
+                if(parseInt(port.vendorId) === parseInt(supportDevice[j].vid) &&
+                    parseInt(port.productId) === parseInt(supportDevice[j].pid)){
 
                     info=port.serialNumber.split('_');
                     len_k=info.length;

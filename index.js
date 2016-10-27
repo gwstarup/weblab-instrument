@@ -73,12 +73,21 @@ function getDeviceListWithDelay(device,callback){
     updateValidDevice(function(validDevice){
       // console.log("validDevice=");
       // console.log(validDevice);
+      let validVid;
+      let validPid;
       for(let i=0, len=validDevice.length; i<len; i++){
-        let validVid = "0x" + validDevice[i].vendorId;
-        let validPid = "0x" + validDevice[i].productId;
-        let newDev =[];
-        // console.log("validVid="+validVid);
-        // console.log("validPid="+validPid);
+
+        if(os.platform() === 'win32'){
+          validVid = "0x" + validDevice[i].vendorId;
+          validPid = "0x" + validDevice[i].productId;
+        }
+        else{
+          validVid = validDevice[i].vendorId;
+          validPid = validDevice[i].productId;
+        }
+
+        console.log("validVid="+validVid);
+        console.log("validPid="+validPid);
         if(parseInt(device.vendorId) === parseInt(validVid) &&
             parseInt(device.productId) === parseInt(validPid) ){
               var info={};
