@@ -241,7 +241,7 @@ exports.listUsbDevice=function(callback){
     var i,len,j;
     var validDevice= [];
     log("listUsbDevice");
-    console.log(os.arch() +" platform :" +os.platform());
+    // console.log(os.arch() +" platform :" +os.platform());
     usbPort.list(function (err, ports) {
         if(err){
             log(err);
@@ -262,18 +262,24 @@ exports.listUsbDevice=function(callback){
             let pidIndex = vidIndex + 9;
             let vid = dev.pnpId.slice(vidIndex+4,vidIndex +8);
             let pid = dev.pnpId.slice(pidIndex+4,pidIndex +8);
+            let serialNumber;
 
-
-            console.log(dev.pnpId);
-            console.log('--------------');
+            // if(dev.manufacturer ==='FTDI'){
+            //   serialNumber = dev.pnpId.slice(vidIndex+18,vidIndex +28);
+            // }
+            // else
+              serialNumber = dev.pnpId.slice(vidIndex+18,vidIndex +27);
+            // console.log(dev.pnpId);
+            // console.log('--------------');
 
             Object.keys(supportDevice).map((key) => {
               let suppPid = supportDevice[key].pid.slice(2,6);
+
               if(pid === suppPid ) {
                 validDevice.push({
                     manufacturer: 'GWINSTEK',
                     // deviceName:info[1],
-                    // serialNumber:info[2],
+                    serialNumber:serialNumber,
                     comName: dev.comName,
                     type: supportDevice[key].type,
                     dateCode: Date.now(),
@@ -285,7 +291,6 @@ exports.listUsbDevice=function(callback){
             });
 
           });
-          console.log(validDevice);
           //return validDevice;
         }
         else{
@@ -302,14 +307,14 @@ exports.listUsbDevice=function(callback){
                         info.splice(0,2,"GW");
                         //FIXME
                         info[1] += "_VCP_PORT";
-                        console.log(info);
+                        // console.log(info);
                     }
                     else if(port.productId === "0x6001"){
-                        console.log("match 0x6001");
-                        console.log(info);
+                        // console.log("match 0x6001");
+                        // console.log(info);
                         info.splice(0,4,"GW");
                         info.splice(1,0,"GPD-4303S");
-                        console.log(info);
+                        // console.log(info);
                     }
                     else{
                         if(len_k>3){
@@ -341,6 +346,8 @@ exports.listUsbDevice=function(callback){
             }
         }
         }
+        // console.log(validDevice);
+        // console.log("end listUsbDevice-----------------------------")
         //log(validDevice.slice());
         callback(validDevice);
     });

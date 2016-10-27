@@ -19,14 +19,15 @@ var afgDev = require('./inst-driver/afg.js');
 var dmmDev = require('./inst-driver/dmm.js');
 var pwrDev = require('./inst-driver/pwr.js');
 var supportDevice = require('./inst-driver/sys/sysConstant.js').supportDevice;
+const os = require('os');
 
 var validDevice=[];
 var connectedDevice=[];
 
 function updateValidDevice(callback){
   log("updateValidDevice");
-
-  fs.readdir('/dev', function (err, files) {
+  if(os.platform() !== 'win32'){
+    fs.readdir('/dev', function (err, files) {
     if (err) {
       return;
     }
@@ -45,6 +46,7 @@ function updateValidDevice(callback){
       });
     });
   });
+  }
 
   usbDev.listUsbDevice(function(devList){
       if(devList === undefined){
@@ -68,10 +70,37 @@ function getDeviceListWithDelay(device,callback){
   setTimeout(function(){
     log('add device: ');
     log(device);
-    updateValidDevice(function(){
-      callback(device);
+    updateValidDevice(function(validDevice){
+      // console.log("validDevice=");
+      // console.log(validDevice);
+      for(let i=0, len=validDevice.length; i<len; i++){
+        let validVid = "0x" + validDevice[i].vendorId;
+        let validPid = "0x" + validDevice[i].productId;
+        let newDev =[];
+        // console.log("validVid="+validVid);
+        // console.log("validPid="+validPid);
+        if(parseInt(device.vendorId) === parseInt(validVid) &&
+            parseInt(device.productId) === parseInt(validPid) ){
+              var info={};
+
+              info.deviceName = validDevice[i].deviceName;
+              info.manufacturer = validDevice[i].manufacturer;
+              info.serialNumber = validDevice[i].serialNumber;
+              info.vendorId = validDevice[i].vendorId;
+              info.productId = validDevice[i].productId;
+              info.type = validDevice[i].type;
+              info.comName = validDevice[i].comName;
+              info.baudrate = validDevice[i].baudrate;
+              info.driverID = validDevice[i].type+'-'+validDevice[i].serialNumber;
+
+              callback(info);
+              return;
+        }
+
+      }
+      callback(null);
     });
-  },10000);
+  },3000);
 };
 
 module.exports = {
@@ -91,7 +120,7 @@ module.exports = {
         info.type = validDevice[i].type;
         info.comName = validDevice[i].comName;
         info.baudrate = validDevice[i].baudrate;
-        info.driverID = validDevice[i].type+'-'+validDevice[i].dateCode;
+        info.driverID = validDevice[i].type+'-'+validDevice[i].serialNumber;
         // for(j in supportDevice){
         //   log('search device')
         //   if(parseInt(validDevice[i].productId) === parseInt(supportDevice[j].pid)){
@@ -99,7 +128,9 @@ module.exports = {
         //     info.driverID = supportDevice[j].type+'-'+validDevice[i].serialNumber;
         //   }
         // }
-        console.log(info);
+        // console.log("getUsbDevice");
+        // console.log(info);
+        // console.log("--------------");
         devInfo.push(info);
     }
     return devInfo;
@@ -108,7 +139,8 @@ module.exports = {
     var i,len,type='',valid=false;
 
     log('connectUsbDevice');
-
+    // console.log("connectUsbDevice");
+    // console.log(device);
     for(i=0,len=connectedDevice.length; i<len; i++){
       if(device.serialNumber === connectedDevice[i].devInfo.serialNumber){
         callback(['409',' device already connected ']);
@@ -203,14 +235,20 @@ module.exports = {
               log('create PWS usb instance');
               log(device);
 
-              id=device.driverID;
+
               devDri=pwrDev.PwrUSB(device);
               devDri.connect()
                 .then(function(){
                   log('pwr connect done');
                   devDri.model().then(function(info){
                     device.deviceName = info.devModel;
+                    // console.log("validDevice driver id="+validDevice[0].type+'-'+validDevice[0].serialNumber);
                     device.serialNumber = info.serialNumber;
+                    // console.log("pwr serialNumber ="+ device.serialNumber);
+                    id=device.driverID;
+                    // console.log("pwr driverID="+id);
+                    // console.log("validDevice driver id="+validDevice[0].type+'-'+validDevice[0].serialNumber);
+                    // device.driverID = id;
                     connectedDevice.push({id:id,devInfo:device,devDri:devDri});
                     log(connectedDevice);
                     callback('',id);
@@ -242,8 +280,8 @@ module.exports = {
   },
   onAddUsb : function(callback){
     usbDev.regAddEvent(function(device){
-      console.log("usb plug in");
-      console.log(device);
+      log("usb plug in");
+      log(device);
       getDeviceListWithDelay(device,callback);
       // log('add: '+ device);
       // updateValidDevice(function(){
@@ -255,8 +293,8 @@ module.exports = {
     usbDev.regRemoveEvent(function(device){
       var i,len,devDri;
 
-      console.log("usb remove");
-      console.log(device);
+      log("usb remove");
+      log(device);
       log('remove: '+ device);
       log('connectedDevice');
       log(connectedDevice);
@@ -266,41 +304,40 @@ module.exports = {
         for(i=0,len=connectedDevice.length; i<len; i++){
           log(connectedDevice[i]);
           log(connectedDevice[i].devInfo.serialNumber);
-          if(device.serialNumber === connectedDevice[i].devInfo.serialNumber){
-            let devIndex = i;
-            // devDri =connectedDevice[devIndex].devDri;
-            // devDri.closeDev()
-            //   .then(function(){
-            //     log('connectedDevice after remove');
-            //     log(connectedDevice);
-            //     log("delete connectedDevice "+devIndex);
-            //     delete connectedDevice[devIndex].devDri;
-            //     connectedDevice.splice(devIndex,1);
-            //     log(connectedDevice);
-            //     log('--------------------');
-            //     callback(device);
-            //   })
-            //   .catch(function(err){
-            //     log(err);
-            //     delete connectedDevice[devIndex].devDri;
-            //     connectedDevice.splice(devIndex,1);
-            //     log('close device not work');
-            //     callback(device);
-            //   });
+          if(os.platform() === 'win32'){
+            let validVid = "0x" + connectedDevice[i].devInfo.vendorId;
+            let validPid = "0x" + connectedDevice[i].devInfo.productId;
+            // console.log("validVid="+validVid);
+            // console.log("validPid="+validPid);
+            if(parseInt(device.vendorId) === parseInt(validVid) &&
+                parseInt(device.productId) === parseInt(validPid) ){
+                  device.serialNumber = connectedDevice[i].devInfo.serialNumber;
+                  delete connectedDevice[i].devDri;
+                  connectedDevice.splice(i,1);
+                  log(connectedDevice);
+                  log('--------------------');
+                  callback(device);
+                  break;
+            }
+          }
+          else{
+            if(device.serialNumber === connectedDevice[i].devInfo.serialNumber){
+              let devIndex = i;
+              log('connectedDevice after remove');
+              log(connectedDevice);
+              log("delete connectedDevice "+devIndex);
+              delete connectedDevice[devIndex].devDri;
+              connectedDevice.splice(devIndex,1);
+              log(connectedDevice);
+              log('--------------------');
+              callback(device);
 
-            log('connectedDevice after remove');
-            log(connectedDevice);
-            log("delete connectedDevice "+devIndex);
-            delete connectedDevice[devIndex].devDri;
-            connectedDevice.splice(devIndex,1);
-            log(connectedDevice);
-            log('--------------------');
-            callback(device);
-
-            break;
+              break;
+            }
           }
         }
       });
+
    });
   },
   findType : function(pid){
