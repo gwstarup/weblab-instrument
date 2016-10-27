@@ -58,10 +58,11 @@ function getIDN(dev, data, cb) {
                 if (id[1] === gdsModel[i]) {
                     dev.gdsType = supportType[j];
                     dev.gdsModel = id[1];
-                    if(dev.gdsType === 'GPDX303S'){
-
+                    if(dev.gdsType === 'GPDX303S' || dev.gdsType === 'AFG2200' || dev.gdsType === 'MFG22X0'){
                         dev.usb.serialNumber = id[2].slice(3);
-
+                    }
+                    else{
+                      dev.usb.serialNumber = id[2];
                     }
                     dev.maxChNum = dev.commandObj[supportType[j]].maxChNum[gdsModel[i]];
                     break;
@@ -376,4 +377,3 @@ Dev.prototype.usbDisconnect = function(Callback) {
 // uitl.inherits(Dev, events.EventEmitter);
 
 exports.Dev = Dev;
-

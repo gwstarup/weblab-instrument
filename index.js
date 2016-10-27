@@ -59,7 +59,7 @@ function updateValidDevice(callback){
         validDevice = validDevice.slice(0,validDevice.length-1);
       }
       log(validDevice);
-      fs.writeFileSync("/tmp/local-device-list", JSON.stringify(validDevice));
+      // fs.writeFileSync("/tmp/local-device-list", JSON.stringify(validDevice));
       if(callback)
         callback(validDevice);
   });
@@ -88,14 +88,18 @@ module.exports = {
         info.serialNumber = validDevice[i].serialNumber;
         info.vendorId = validDevice[i].vendorId;
         info.productId = validDevice[i].productId;
-        for(j in supportDevice){
-          log('search device')
-          if(parseInt(validDevice[i].productId) === parseInt(supportDevice[j].pid)){
-            info.type = supportDevice[j].type;
-            info.driverID = supportDevice[j].type+'-'+validDevice[i].serialNumber;
-          }
-        }
-
+        info.type = validDevice[i].type;
+        info.comName = validDevice[i].comName;
+        info.baudrate = validDevice[i].baudrate;
+        info.driverID = validDevice[i].type+'-'+validDevice[i].dateCode;
+        // for(j in supportDevice){
+        //   log('search device')
+        //   if(parseInt(validDevice[i].productId) === parseInt(supportDevice[j].pid)){
+        //     info.type = supportDevice[j].type;
+        //     info.driverID = supportDevice[j].type+'-'+validDevice[i].serialNumber;
+        //   }
+        // }
+        console.log(info);
         devInfo.push(info);
     }
     return devInfo;
@@ -136,9 +140,12 @@ module.exports = {
               devDri.connect()
                 .then(function(){
                   log('dso connect done');
-                  connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                  log(connectedDevice);
-                  callback('',id);
+                  devDri.model().then(function(info){
+                    device.deviceName = info.model;
+                    device.serialNumber = info.serialNumber;
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
+                    callback('',id);
+                  });
                 })
                 .catch(function(e){
                   devDri.disconnect().then(function(){
@@ -154,9 +161,13 @@ module.exports = {
               devDri.connect()
                 .then(function(){
                   log('afg connect done');
-                  connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                  log(connectedDevice);
-                  callback('',id);
+                  devDri.model().then(function(info){
+                    device.deviceName = info.model;
+                    device.serialNumber = info.serialNumber;
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
+                    callback('',id);
+                  });
+
                 })
                 .catch(function(e){
                   devDri.disconnect().then(function(){
@@ -173,10 +184,10 @@ module.exports = {
               devDri.connect()
                 .then(function(){
                   log('dmm connect done');
-                  devDri.model().then(function(devModel){
-                    device.deviceName = devModel;
+                  devDri.model().then(function(info){
+                    device.deviceName = info.model;
+                    device.serialNumber = info.serialNumber;
                     connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                    log(connectedDevice);
                     callback('',id);
                   });
 
@@ -207,7 +218,7 @@ module.exports = {
                 })
                 .catch(function(e){
                   devDri.disconnect().then(function(){
-                    log('disconnect pws device');
+                    console.log('disconnect pws device');
                     callback(e);
                   });
                 });
@@ -231,6 +242,8 @@ module.exports = {
   },
   onAddUsb : function(callback){
     usbDev.regAddEvent(function(device){
+      console.log("usb plug in");
+      console.log(device);
       getDeviceListWithDelay(device,callback);
       // log('add: '+ device);
       // updateValidDevice(function(){
@@ -242,6 +255,8 @@ module.exports = {
     usbDev.regRemoveEvent(function(device){
       var i,len,devDri;
 
+      console.log("usb remove");
+      console.log(device);
       log('remove: '+ device);
       log('connectedDevice');
       log(connectedDevice);

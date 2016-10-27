@@ -627,7 +627,10 @@ var _DmmCtrl = function(dmmObj) {
 
         // console.log("get dmm model");
         return new Promise(function(resolve, reject) {
-            resolve(self.dev.gdsModel);
+          var serialNumber = self.dev.usb.serialNumber;
+
+          resolve({ model : self.dev.gdsModel , type : self.dev.gdsType,serialNumber : serialNumber });
+
         });
     }).bind(dmmObj);
 /**

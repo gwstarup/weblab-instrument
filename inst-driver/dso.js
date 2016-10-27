@@ -2096,8 +2096,9 @@ var _DsoCtrl = function(dsoObj) {
         var self = this;
 
         return new Promise(function(resolve, reject) {
-
-            resolve({ model : self.dev.gdsModel , type : self.dev.gdsType });
+            var serialNumber = self.dev.usb.serialNumber;
+            // console.log("dsoctrl.model="+self.dev.gdsModel);
+            resolve({ model : self.dev.gdsModel , type : self.dev.gdsType,serialNumber : serialNumber });
         });
     }).bind(dsoObj);
 /**
@@ -2437,6 +2438,3 @@ exports.showNetDevice = function() {
     }
     return devInfo;
 };
-
-
-

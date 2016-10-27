@@ -1948,8 +1948,9 @@ var _AfgCtrl = function(afgObj) {
         var self = this;
 
         return new Promise(function(resolve, reject) {
+          var serialNumber = self.dev.usb.serialNumber;
 
-            resolve(self.dev.gdsModel);
+          resolve({ model : self.dev.gdsModel , type : self.dev.gdsType, serialNumber : serialNumber });
         });
     }).bind(afgObj);
 /**
@@ -2106,5 +2107,3 @@ exports.AfgUSB  = function(device) {
 
     return _AfgCtrl(afgObj);
 };
-
-

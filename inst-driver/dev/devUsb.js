@@ -7,9 +7,12 @@ var events=require('events');
 var usbPort = require('serialport');
 
 var debug = require('debug');
+const os = require('os');
+
 var log = debug('usb:log');
 var info = debug('usb:info');
 var error = debug('usb:error');
+
 
 var supportDevice = require('../sys/sysConstant.js').supportDevice;
 
@@ -38,21 +41,22 @@ function pairUsb(dev,callback){
             log("ports[%d].serialNumber %x",i,ports[i].serialNumber);
             log("dev.usb.vid %x",dev.usb.vid);
             log("dev.usb.pid %x",dev.usb.pid);
-            if(dev.usb.pid === 48){
-                serialNumber= 'Silicon_Labs'+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
-                usbbaudrate=115200;
-            }
-            else if(dev.usb.pid === 24577){
-                serialNumber= 'FTDI_FT232R_USB_UART_'+dev.usb.serialNumber;
-                usbbaudrate=9600
-            }
-            else{
-                serialNumber= dev.usb.manufacturer+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
-                usbbaudrate=115200
-            }
-            log("serialNumber %x",serialNumber);
+            // if(dev.usb.pid === 48){
+            //     // serialNumber= 'Silicon_Labs'+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
+            //     usbbaudrate=115200;
+            // }
+            // else if(dev.usb.pid === 24577){
+            //     // serialNumber= 'FTDI_FT232R_USB_UART_'+dev.usb.serialNumber;
+            //     usbbaudrate=9600
+            // }
+            // else{
+            //     // serialNumber= dev.usb.manufacturer+'_'+dev.usb.deviceName+'_'+dev.usb.serialNumber;
+            //     usbbaudrate=115200
+            // }
+            log("comName =",dev.usb.comName);
 
-            if(ports[i].serialNumber === serialNumber || ports[i].productId == 24577){
+            // if(ports[i].serialNumber === serialNumber || ports[i].productId == 24577){
+            if(ports[i].comName === dev.usb.comName ){
                 log("serialNumber match");
                 if(dev.state.conn!=='connected'){
                     var port=ports[i];
@@ -60,7 +64,7 @@ function pairUsb(dev,callback){
                             var device=null;
 
                             dev.usb.device= new usbPort(port.comName,{
-                                baudrate: usbbaudrate,
+                                baudrate: dev.usb.baudrate,
                                 encoding:'binary',
                                 lock: false,
                                 autoOpen: false
@@ -174,6 +178,8 @@ exports.BindUsbObj=function(dev,device){
         manufacturer:device.manufacturer,
         deviceName:device.deviceName,
         serialNumber:device.serialNumber,
+        comName:device.comName,
+        baudrate:device.baudrate,
         vid:device.vendorId,
         pid:device.productId,
         // usbDev:{},
@@ -235,6 +241,7 @@ exports.listUsbDevice=function(callback){
     var i,len,j;
     var validDevice= [];
     log("listUsbDevice");
+    console.log(os.arch() +" platform :" +os.platform());
     usbPort.list(function (err, ports) {
         if(err){
             log(err);
@@ -248,7 +255,41 @@ exports.listUsbDevice=function(callback){
         }
         log('get device');
         log(ports);
-        for(i=0, len=ports.length; i < len; i++){
+        if(os.platform() === 'win32'){
+          ports.forEach( ( dev, key) => {
+            // pnpId return xxxxVID_0403+PID_6000xxxxxx
+            let vidIndex = dev.pnpId.match('VID').index;
+            let pidIndex = vidIndex + 9;
+            let vid = dev.pnpId.slice(vidIndex+4,vidIndex +8);
+            let pid = dev.pnpId.slice(pidIndex+4,pidIndex +8);
+
+
+            console.log(dev.pnpId);
+            console.log('--------------');
+
+            Object.keys(supportDevice).map((key) => {
+              let suppPid = supportDevice[key].pid.slice(2,6);
+              if(pid === suppPid ) {
+                validDevice.push({
+                    manufacturer: 'GWINSTEK',
+                    // deviceName:info[1],
+                    // serialNumber:info[2],
+                    comName: dev.comName,
+                    type: supportDevice[key].type,
+                    dateCode: Date.now(),
+                    baudrate:supportDevice[key].baudrate,
+                    vendorId : vid,
+                    productId : pid
+                });
+              }
+            });
+
+          });
+          console.log(validDevice);
+          //return validDevice;
+        }
+        else{
+          for(i=0, len=ports.length; i < len; i++){
             var port = ports[i];
             for(j in supportDevice){
                 var info,k,len_k,manuf='';
@@ -286,16 +327,22 @@ exports.listUsbDevice=function(callback){
                         manufacturer:info[0],
                         deviceName:info[1],
                         serialNumber:info[2],
+                        comName: port.comName,
+                        type: supportDevice[j].type,
+                        dateCode: Date.now(),
+                        baudrate:supportDevice[j].baudrate,
                         vendorId:parseInt(port.vendorId),
                         productId:parseInt(port.productId)
                     });
                     break;
                 }
+
+
             }
+        }
         }
         //log(validDevice.slice());
         callback(validDevice);
     });
 }
 // exports.pairUsb = pairUsb;
-
