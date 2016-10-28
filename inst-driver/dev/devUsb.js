@@ -258,6 +258,8 @@ exports.listUsbDevice=function(callback){
         if(os.platform() === 'win32'){
           ports.forEach( ( dev, key) => {
             // pnpId return xxxxVID_0403+PID_6000xxxxxx
+            if(!dev.pnpId.match('VID'))
+                return;
             let vidIndex = dev.pnpId.match('VID').index;
             let pidIndex = vidIndex + 9;
             let vid = dev.pnpId.slice(vidIndex+4,vidIndex +8);
