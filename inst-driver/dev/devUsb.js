@@ -277,7 +277,7 @@ exports.listUsbDevice=function(callback){
             Object.keys(supportDevice).map((key) => {
               let suppPid = supportDevice[key].pid.slice(2,6);
 
-              if(pid === suppPid ) {
+              if(pid.toUpperCase() === suppPid.toUpperCase() ) {
                 validDevice.push({
                     manufacturer: 'GWINSTEK',
                     // deviceName:info[1],

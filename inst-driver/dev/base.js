@@ -138,7 +138,7 @@ function checkDsoExist(dev, callback) {
         dev.state.timeoutCb();
     }, tcnt);
 
-    if(dev.usb.pid === 24577){
+    if(dev.usb.pid === 24577 || dev.usb.pid === '6001'){
         if(dev.write('REMOTE\r\n')){
             setTimeout(function(){
                 dev.write('*IDN?\r\n');
