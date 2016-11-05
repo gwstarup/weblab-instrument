@@ -1,6 +1,6 @@
 {
   "name": "weblab-instrument",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "communication with instrument through usb",
   "main": "index.js",
   "dependencies": {

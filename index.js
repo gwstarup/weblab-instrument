@@ -301,6 +301,8 @@ module.exports = {
   onRemoveUsb : function(callback){
     usbDev.regRemoveEvent(function(device){
       var i,len,devDri;
+      let validVid;
+      let validPid;
 
       log("usb remove");
       log(device);
@@ -314,40 +316,30 @@ module.exports = {
           log(connectedDevice[i]);
           log(connectedDevice[i].devInfo.serialNumber);
           if(os.platform() === 'win32'){
-            let validVid = "0x" + connectedDevice[i].devInfo.vendorId;
-            let validPid = "0x" + connectedDevice[i].devInfo.productId;
-            // console.log("validVid="+validVid);
-            // console.log("validPid="+validPid);
-            if(parseInt(device.vendorId) === parseInt(validVid) &&
-                parseInt(device.productId) === parseInt(validPid) ){
-                  let devDri = connectedDevice[i].devDri;
-
-                  device.serialNumber = connectedDevice[i].devInfo.serialNumber;
-                  devDri.closeDev().then( function(){
-                    delete connectedDevice[i].devDri;
-                    connectedDevice.splice(i,1);
-                    log(connectedDevice);
-                    log('--------------------');
-                    callback(device);
-                  });
-                  break;
-            }
+            validVid = "0x" + connectedDevice[i].devInfo.vendorId;
+            validPid = "0x" + connectedDevice[i].devInfo.productId;
           }
           else{
-            if(device.serialNumber === connectedDevice[i].devInfo.serialNumber){
-              let devIndex = i;
-              log('connectedDevice after remove');
-              log(connectedDevice);
-              log("delete connectedDevice "+devIndex);
-              delete connectedDevice[devIndex].devDri;
-              connectedDevice.splice(devIndex,1);
-              log(connectedDevice);
-              log('--------------------');
-              callback(device);
-
-              break;
-            }
+            validVid = connectedDevice[i].devInfo.vendorId;
+            validPid = connectedDevice[i].devInfo.productId;
           }
+          // console.log("validVid="+validVid);
+          // console.log("validPid="+validPid);
+          if(parseInt(device.vendorId) === parseInt(validVid) &&
+              parseInt(device.productId) === parseInt(validPid) ){
+                let devDri = connectedDevice[i].devDri;
+
+                device.serialNumber = connectedDevice[i].devInfo.serialNumber;
+                devDri.closeDev().then( function(){
+                  delete connectedDevice[i].devDri;
+                  connectedDevice.splice(i,1);
+                  log(connectedDevice);
+                  log('--------------------');
+                  callback(device);
+                });
+                break;
+          }
+
         }
       });
 
