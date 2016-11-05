@@ -740,6 +740,11 @@
       "command":":AUTOSet",
       "parameter_type":"parameter_free"
     },
+    "USBDelay":{
+      "command":":usbdelay",
+      "parameter_type":"string",
+      "parameter":["OFF","ON"]
+    },
     "AutosetEnable":{
       "command":":EDUcation:AUTOSet",
       "parameter_type":"string",
@@ -1368,6 +1373,11 @@
     "AUTOSET":{
       "command":":AUTOSet",
       "parameter_type":"parameter_free"
+    },
+    "USBDelay":{
+      "command":":usbdelay",
+      "parameter_type":"string",
+      "parameter":["OFF","ON"]
     },
     "AutosetEnable":{
       "command":":EDUcation:AUTOSet",

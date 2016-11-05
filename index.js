@@ -320,12 +320,16 @@ module.exports = {
             // console.log("validPid="+validPid);
             if(parseInt(device.vendorId) === parseInt(validVid) &&
                 parseInt(device.productId) === parseInt(validPid) ){
+                  let devDri = connectedDevice[i].devDri;
+
                   device.serialNumber = connectedDevice[i].devInfo.serialNumber;
-                  delete connectedDevice[i].devDri;
-                  connectedDevice.splice(i,1);
-                  log(connectedDevice);
-                  log('--------------------');
-                  callback(device);
+                  devDri.closeDev().then( function(){
+                    delete connectedDevice[i].devDri;
+                    connectedDevice.splice(i,1);
+                    log(connectedDevice);
+                    log('--------------------');
+                    callback(device);
+                  });
                   break;
             }
           }

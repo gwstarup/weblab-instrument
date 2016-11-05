@@ -157,6 +157,8 @@ var _DmmCtrl = function(dmmObj) {
                     self.dev.usbDisconnect(disconnect);
                 }else if (self.dev.interf === 'net') {
                     self.dev.tcpDisconnect(disconnect);
+                }else{
+                    resolve();
                 }
             }else{
                 resolve();

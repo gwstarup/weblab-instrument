@@ -87,7 +87,7 @@ function checkDsoExist(dev, callback) {
     dev.cmdHandler = getIDN;
     dev.handlerSelf = dev;
     dev.state.setTimeout = true;
-    if(dev.usb.pid === 24577){
+    if(dev.usb.pid === 24577 || dev.usb.pid === '6001'){
         tcnt = 6000;
     }
     else{
@@ -354,7 +354,7 @@ Dev.prototype.usbConnect = function(Callback) {
 Dev.prototype.usbDisconnect = function(Callback) {
     var self = this;
 
-    // if(self.state.conn === 'connected'){
+    if(self.state.conn !== 'disconnected'){
         usbDev.closeUsb(this, function(err) {
             if(err){
                 console.log(err);
@@ -365,11 +365,11 @@ Dev.prototype.usbDisconnect = function(Callback) {
             if(Callback)
                 Callback(err);
         });
-    // }
-    // else{
-    //     if(Callback)
-    //         Callback();
-    // }
+    }
+    else{
+        if(Callback)
+            Callback();
+    }
 };
 
 

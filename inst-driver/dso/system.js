@@ -13,6 +13,7 @@ function SysCmd() {
     this.dispData = new Buffer(1152000);
     this.AutosetMode = 'FITSCREEN';
     this.dataCount = 0;
+    this.usbdelay="OFF";
     this.recCount = 0;
     this.staWeight = '2';
     this.staMode =  'OFF';
@@ -63,6 +64,19 @@ SysCmd.prototype.cmdHandler = {
                                 log(res);
                                 res = res.slice(0,-1);
                                 sysObj.sysLock = res.toString();
+                                return true;
+                              }
+        },
+        'USBDelay':{
+                    setHelper:function(sysObj,arg,cb){
+                                log(sysObj.cmdHandler);
+                                sysObj.usbdelay = arg;
+                                return true;
+                              },
+                    getHandler:function(sysObj,res,cb){
+                                log(res);
+                                res = res.slice(0,-1);
+                                sysObj.usbdelay = res.toString();
                                 return true;
                               }
         },

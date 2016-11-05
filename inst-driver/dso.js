@@ -281,6 +281,8 @@ var _DsoCtrl = function(dsoObj) {
                     self.dev.usbDisconnect(disconnect);
                 }else if (self.dev.interf === 'net') {
                     self.dev.tcpDisconnect(disconnect);
+                }else{
+                    resolve();
                 }
             }else{
                 resolve();
@@ -1971,6 +1973,34 @@ var _DsoCtrl = function(dsoObj) {
             var sysCmd = [
                 {id:'sys',prop:'StatisticStaWeight',arg:weight,cb:statistic,method:'set'}
             ];
+
+            self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
+            self.cmdEvent.emit('cmd_write', sysCmd);
+        });
+    }).bind(dsoObj);
+
+
+/**
+*
+*
+*/
+    dsoctrl.usbdelay = (function(props) {
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            function setDone(e){
+                if (e) {
+                    reject(e);
+
+                }else {
+                    resolve();
+                }
+
+            };
+
+            let sysCmd = [
+                {id:'sys', prop:'USBDelay', arg:props, cb:null, method:'set'}
+            ];
+            console.log("usb delay" + props);
 
             self.dev.cmdSequence = self.dev.cmdSequence.concat(sysCmd);
             self.cmdEvent.emit('cmd_write', sysCmd);

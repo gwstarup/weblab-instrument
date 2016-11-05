@@ -186,6 +186,8 @@ var _AfgCtrl = function(afgObj) {
                     self.dev.usbDisconnect(disconnect);
                 }else if (self.dev.interf === 'net') {
                     self.dev.tcpDisconnect(disconnect);
+                }else{
+                    resolve();
                 }
             }else{
                 resolve();

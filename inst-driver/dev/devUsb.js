@@ -57,7 +57,7 @@ function pairUsb(dev,callback){
 
             // if(ports[i].serialNumber === serialNumber || ports[i].productId == 24577){
             if(ports[i].comName === dev.usb.comName ){
-                log("serialNumber match");
+                log("comName match");
                 if(dev.state.conn!=='connected'){
                     var port=ports[i];
                         setTimeout(function(){
@@ -258,6 +258,8 @@ exports.listUsbDevice=function(callback){
         if(os.platform() === 'win32'){
           ports.forEach( ( dev, key) => {
             // pnpId return xxxxVID_0403+PID_6000xxxxxx
+            if(!dev.pnpId)
+                return;
             if(!dev.pnpId.match('VID'))
                 return;
             let vidIndex = dev.pnpId.match('VID').index;
