@@ -143,6 +143,8 @@ var _AfgCtrl = function(afgObj) {
 
             };
 
+            self.dev.usbConnect(conn);
+            /*
             if (self.dev.interf === 'usb') {
                 self.dev.usbConnect(conn);
             }else if (self.dev.interf === 'net') {
@@ -151,6 +153,7 @@ var _AfgCtrl = function(afgObj) {
             else{
                 reject(Error('Not supported interface'));
             }
+            */
         });
     }).bind(afgObj);
 /**
@@ -179,9 +182,13 @@ var _AfgCtrl = function(afgObj) {
 
             };
             if(self.dev.state.conn!=='disconnected'){
+                self.dev.cmdSequence = [];
                 if(self.dev.writeTimeoutObj!==null){
                     clearTimeout(self.dev.writeTimeoutObj);
                 }
+
+                self.dev.usbDisconnect(disconnect);
+                /*
                 if (self.dev.interf === 'usb') {
                     self.dev.usbDisconnect(disconnect);
                 }else if (self.dev.interf === 'net') {
@@ -189,6 +196,7 @@ var _AfgCtrl = function(afgObj) {
                 }else{
                     resolve();
                 }
+                */
             }else{
                 resolve();
             }
@@ -2023,7 +2031,7 @@ var cmd_write = function() {
         }
     }
 
-    if(self.dev.state.conn ==='disconnect'){
+    if(self.dev.state.conn ==='disconnected'){
         if (cb)
             cb("device disconnect");
         self.dev.asyncWrite = 'done';

@@ -184,8 +184,10 @@ module.exports = {
                   devDri.model().then(function(info){
                     device.deviceName = info.model;
                     device.serialNumber = info.serialNumber;
-                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                    callback('',id);
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri, opened: false});
+                    devDri.disconnect().then( function(){
+                      callback('',id);
+                    });
                   });
                 })
                 .catch(function(e){
@@ -205,8 +207,10 @@ module.exports = {
                   devDri.model().then(function(info){
                     device.deviceName = info.model;
                     device.serialNumber = info.serialNumber;
-                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                    callback('',id);
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri, opened: false});
+                    devDri.disconnect().then( function(){
+                      callback('',id);
+                    });
                   });
 
                 })
@@ -228,8 +232,10 @@ module.exports = {
                   devDri.model().then(function(info){
                     device.deviceName = info.model;
                     device.serialNumber = info.serialNumber;
-                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
-                    callback('',id);
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri, opened: false});
+                    devDri.disconnect().then( function(){
+                      callback('',id);
+                    });
                   });
 
                 })
@@ -258,9 +264,11 @@ module.exports = {
                     // console.log("pwr driverID="+id);
                     // console.log("validDevice driver id="+validDevice[0].type+'-'+validDevice[0].serialNumber);
                     // device.driverID = id;
-                    connectedDevice.push({id:id,devInfo:device,devDri:devDri});
+                    connectedDevice.push({id:id,devInfo:device,devDri:devDri, opened: false});
                     log(connectedDevice);
-                    callback('',id);
+                    devDri.disconnect().then( function(){
+                      callback('',id);
+                    });
                   })
                 })
                 .catch(function(e){
@@ -285,6 +293,7 @@ module.exports = {
             return devDri;
           }
         }
+
         return null;
   },
   onAddUsb : function(callback){
@@ -354,6 +363,43 @@ module.exports = {
       }
     }
     return null;
+  },
+  openDevice : function(){
+    return new Promise(function(resolve, reject) {
+        let result = connectedDevice.map( (dev) => {
+          let devDri =dev.devDri;
+          if(devDri.connect){
+            devDri.connect( () => {
+              dev.opened = true;
+              return dev.opened;
+            });
+          }
+          return false;
+        });
+        console.log("openDevice result =");
+        console.log(result);
+        resolve();
+    });
+  },
+  closeDevice : function(){
+    return new Promise(function(resolve, reject) {
+        let result = connectedDevice.map( (dev) => {
+          let devDri =dev.devDri;
+          if(devDri.closeDev){
+            devDri.closeDev( () => {
+              dev.opened = false;
+              return dev.opened;
+            });
+          }
+          return false;
+        });
+        console.log("closeDevice result =");
+        console.log(result);
+        resolve();
+    });
+  },
+  isOpened : function(){
+    return false;
   }
 
 

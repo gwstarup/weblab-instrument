@@ -1,7 +1,7 @@
 {
   "GDS2000A": {
     "model":["GDS-2072A","GDS-2074A","GDS-2102A","GDS-2104A","GDS-2202A","GDS-2204A","GDS-2302A","GDS-2304A"],
-    "maxChNum":{"GDS-2072A":2,"GDS-2074A":4,"GDS-2102A":2,"GDS-2104A":4,"GDS-2202E":2,"GDS-2204E":4,"GDS-2302E":2,"GDS-2304E":4},
+    "maxChNum":{"GDS-2072A":2,"GDS-2074A":4,"GDS-2102A":2,"GDS-2104A":4,"GDS-2202A":2,"GDS-2204A":4,"GDS-2302A":2,"GDS-2304A":4},
     "resolution":{"x":800,"y":600},
     "BWLimit": {
       "command":[":channel1:bwlimit",":channel2:bwlimit",":channel3:bwlimit",":channel4:bwlimit"],

@@ -159,8 +159,11 @@ function pairUsb(dev,callback){
     });
 }
 exports.openUsb=function(dev,callback){
-    // pairUsb(dev,callback);
-    pairUsb(dev,callback);
+
+    if(!dev.usb.device)
+        pairUsb(dev,callback);
+    else
+        callback();
 }
 exports.closeUsb=function(dev,callback){
 

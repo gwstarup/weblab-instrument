@@ -238,14 +238,16 @@ var _DsoCtrl = function(dsoObj) {
 
             };
 
-            if (self.dev.interf === 'usb') {
-                self.dev.usbConnect(conn);
-            }else if (self.dev.interf === 'net') {
-                self.dev.tcpConnect(conn);
-            }
-            else{
-                reject(Error('Not supported interface'));
-            }
+            self.dev.usbConnect(conn);
+
+            // if (self.dev.interf === 'usb') {
+            //     self.dev.usbConnect(conn);
+            // }else if (self.dev.interf === 'net') {
+            //     self.dev.tcpConnect(conn);
+            // }
+            // else{
+            //     reject(Error('Not supported interface'));
+            // }
         });
     }).bind(dsoObj);
 /**
@@ -264,19 +266,23 @@ var _DsoCtrl = function(dsoObj) {
                 if (e) {
                     log('disconnect return');
                     log(e);
-                    delete self.dev.usb;
+                    // delete self.dev.usb;
                     reject(e);
 
                 }else {
-                    delete self.dev.usb;
+                    // delete self.dev.usb;
                     resolve();
                 }
 
             };
             if(self.dev.state.conn!=='disconnected'){
+                self.dev.cmdSequence = [];
                 if(self.dev.writeTimeoutObj!==null){
                     clearTimeout(self.dev.writeTimeoutObj);
                 }
+
+                self.dev.usbDisconnect(disconnect);
+                /*
                 if (self.dev.interf === 'usb') {
                     self.dev.usbDisconnect(disconnect);
                 }else if (self.dev.interf === 'net') {
@@ -284,6 +290,7 @@ var _DsoCtrl = function(dsoObj) {
                 }else{
                     resolve();
                 }
+                */
             }else{
                 resolve();
             }
@@ -2326,7 +2333,7 @@ var cmd_write = function() {
             break;
         }
     }
-    if(self.dev.state.conn ==='disconnect'){
+    if(self.dev.state.conn ==='disconnected'){
         if (cb)
             cb("device disconnect");
         self.dev.asyncWrite = 'done';
